@@ -52,44 +52,45 @@
                 </div>
             </div>
 
+
             <div style="background-color: #000000;" class="p-8 flex flex-col lg:w-full xl:w-3/5">
-
                 <!-- payment form -->
-
-                <label class="mt-8 text-base leading-4 text-gray-800 dark:text-gray-50">Help Us : Donate </label>
-                <div class="mt-6 flex-col">
-                    <div>
+                <form onsubmit="clickpay()">
+                    <label class="mt-8 text-base leading-4 text-gray-800 dark:text-gray-50">Help Us : Donate </label>
+                    <div class="mt-6 flex-col">
+                        <div>
+                            <input
+                                class="border rounded border-gray-300 p-4 w-full text-base leading-4 placeholder-gray-600 text-gray-600"
+                                name="" required id="vname" placeholder="Name" />
+                        </div>
+                    </div>
+                    <div class="mt-8">
                         <input
-                            class="border rounded border-gray-300 p-4 w-full text-base leading-4 placeholder-gray-600 text-gray-600"
-                            name="" id="vname" placeholder="Name" />
+                            class="border border-gray-300 p-4 rounded w-full text-base leading-4 placeholder-gray-600 text-gray-600"
+                            type="text" required name="" id="vbgroup" placeholder="Blood Group" />
                     </div>
-                </div>
-                <div class="mt-8">
-                    <input
-                        class="border border-gray-300 p-4 rounded w-full text-base leading-4 placeholder-gray-600 text-gray-600"
-                        type="text" name="" id="vbgroup" placeholder="Blood Group" />
-                </div>
-                <div class="mt-8">
-                    <input
-                        class="border border-gray-300 p-4 rounded w-full text-base leading-4 placeholder-gray-600 text-gray-600"
-                        type="number" name="" id="vmno" placeholder="Phone Number" />
-                </div>
-                <div class="mt-8">
-                    <input
-                        class="border border-gray-300 p-4 rounded w-full text-base leading-4 placeholder-gray-600 text-gray-600"
-                        type="email" name="" id="vemail" placeholder="Email" />
-                </div>
-                <div class="mt-8">
-                    <input oninput="calculateDonationAmt()"
-                        class="border border-gray-300 p-4 rounded w-full text-base leading-4 placeholder-gray-600 text-gray-600"
-                        type="text" name="" id="input-donation-amt" placeholder="Amount" />
-                </div>
-                <button onclick="clickpay()"
-                    class="mt-8 border border-transparent bg-amber-100 hover:bg-red-500 flex justify-center items-center py-4 rounded w-full">
-                    <div>
-                        <p class="text-base leading-4">Pay ₹<span id="donation-amt">0</span></p>
+                    <div class="mt-8">
+                        <input
+                            class="border border-gray-300 p-4 rounded w-full text-base leading-4 placeholder-gray-600 text-gray-600"
+                            type="number" required name="" id="vmno" placeholder="Phone Number" />
                     </div>
-                </button>
+                    <div class="mt-8">
+                        <input
+                            class="border border-gray-300 p-4 rounded w-full text-base leading-4 placeholder-gray-600 text-gray-600"
+                            type="email" required name="" id="vemail" placeholder="Email" />
+                    </div>
+                    <div class="mt-8">
+                        <input oninput="calculateDonationAmt()"
+                            class="border border-gray-300 p-4 rounded w-full text-base leading-4 placeholder-gray-600 text-gray-600"
+                            type="text" required name="" id="input-donation-amt" placeholder="Amount" />
+                    </div>
+                    <button type="submit"
+                        class="mt-8 border border-transparent bg-amber-100 hover:bg-red-500 flex justify-center items-center py-4 rounded w-full">
+                        <div>
+                            <p class="text-base leading-4">Pay ₹<span id="donation-amt">0</span></p>
+                        </div>
+                    </button>
+                </form>
             </div>
         </div>
     </div>
@@ -139,6 +140,7 @@
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
     async function clickpay() {
+        event.preventDefault();
         // getting data from form
         const vname = document.getElementById("vname").value;
         const vbgroup = document.getElementById("vbgroup").value;
@@ -200,11 +202,11 @@
                     if (res.status === 200) {
                         console.log('passed');
                         displayNotification("success");
-                        alert('Payment Successful');
+                        // alert('Payment Successful');
                     } else {
                         console.log('failed')
                         displayNotification("failure");
-                        alert('Payment Failed');
+                        // alert('Payment Failed');
                     }
                 }).catch(err => {
                     displayNotification("failure");
