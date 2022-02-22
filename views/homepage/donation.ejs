@@ -1,0 +1,225 @@
+<style>
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+</style>
+
+<div class="py-16 px-4 md:px-6 2xl:px-0 flex justify-center items-center 2xl:mx-auto 2xl:container">
+    <div class="flex flex-col justify-start items-start w-full space-y-9">
+        <div
+            class="flex flex-col xl:flex-row justify-center xl:justify-between space-y-6 xl:space-y-0 xl:space-x-6 w-full">
+            <div style="background-color: #EEEBDD;"
+                class="flex flex-col sm:flex-row xl:flex-col justify-center items-center py-7 sm:py-0 xl:py-10 px-10 xl:w-full">
+                <div class="flex flex-col justify-start items-start w-full space-y-4">
+                    <p class="text-xl md:text-2xl leading-normal text-black">Help US</p>
+                    <p class="text-base font-semibold leading-none text-black">DONATE</p>
+                </div>
+                <div class="mt-6 sm:mt-0 xl:my-10 xl:px-20 w-52 sm:w-96 xl:w-auto">
+                    <img src="assets/blood-donation1.png" alt="headphones" />
+                </div>
+            </div>
+
+            <div style="background-color: #000000;" class="p-8 flex flex-col lg:w-full xl:w-3/5">
+
+                <!-- payment form -->
+                <form>
+                    <label class="mt-8 text-base leading-4 text-gray-800 dark:text-gray-50">Help Us : Donate </label>
+                    <div class="mt-6 flex-col">
+                        <div>
+                            <input
+                                class="border rounded border-gray-300 p-4 w-full text-base leading-4 placeholder-gray-600 text-gray-600"
+                                name="" id="vname" placeholder="Name" />
+                        </div>
+                    </div>
+                    <div class="mt-8">
+                        <input
+                            class="border border-gray-300 p-4 rounded w-full text-base leading-4 placeholder-gray-600 text-gray-600"
+                            type="text" name="" id="vbgroup" placeholder="Blood Group" />
+                    </div>
+                    <div class="mt-8">
+                        <input
+                            class="border border-gray-300 p-4 rounded w-full text-base leading-4 placeholder-gray-600 text-gray-600"
+                            type="number" name="" id="vmno" placeholder="Phone Number" />
+                    </div>
+                    <div class="mt-8">
+                        <input
+                            class="border border-gray-300 p-4 rounded w-full text-base leading-4 placeholder-gray-600 text-gray-600"
+                            type="email" name="" id="vemail" placeholder="Email" />
+                    </div>
+                    <div class="mt-8">
+                        <input oninput="calculateDonationAmt()"
+                            class="border border-gray-300 p-4 rounded w-full text-base leading-4 placeholder-gray-600 text-gray-600"
+                            type="text" name="" id="input-donation-amt" placeholder="Amount" />
+                    </div>
+                    <button onclick="clickpay()"
+                        class="mt-8 border border-transparent bg-amber-100 hover:bg-red-500 flex justify-center items-center py-4 rounded w-full">
+                        <div>
+                            <p class="text-base leading-4">Pay ₹<span id="donation-amt">0</span></p>
+                        </div>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+<div class="absolute top-2 right-0 z-20 h-36 w-full py-8">
+    <div class="mx-auto flex justify-center sm:justify-end h-full">
+        <!--code for notification starts-->
+        <div role="alert"
+            class="sm:mr-6 hidden xl:w-5/12 mx-auto left-0 sm:left-auto right-0 sm:w-6/12 md:w-3/5 justify-between w-11/12 bg-white shadow-lg rounded  sm:flex-row flex-col transition duration-150 ease-in-out"
+            id="notification">
+            <div id="notification-content"
+                class="sm:px-6 p-2 flex mt-4 sm:mt-0 ml-4 sm:ml-0 items-center justify-center bg-green-700 sm:rounded-tl sm:rounded-bl w-12 h-12 sm:h-auto sm:w-auto text-black">
+                <img src="https://tuk-cdn.s3.amazonaws.com/can-uploader/coloured_multiple_with_separator-svg1.svg"
+                    alt="check icon" />
+            </div>
+            <div class="flex flex-col text-black justify-center xl:-ml-4 pl-4 xl:pl-1 sm:w-3/5 pt-4 sm:pb-4 pb-2">
+                <h1 id="payment-message" class="text-lg font-semibold pb-1">Payment Successful</h1>
+                <p class="text-sm  font-normal">Thank supporting us an invoice will be send to your email.</p>
+            </div>
+            <div
+                class="flex sm:flex-col sm:justify-center sm:border-l dark:border-gray-700 items-center border-gray-300 sm:w-1/6 pl-4 sm:pl-0">
+                <a href="javascript:void(0)" class="sm:pt-4 pb-4 flex sm:justify-center w-full cursor-pointer"
+                    onclick="closeModal()">
+                    <span class="sm:text-sm text-xs text-black cursor-pointer">Dismiss</span>
+                </a>
+            </div>
+        </div>
+
+
+        <!--code for notification ends-->
+    </div>
+</div>
+
+
+<script>
+    function displayNotification(msg) {
+        if (msg == "success") {
+            document.getElementById("notification-content").style.backgroundColor = "green";
+        } else {
+            document.getElementById("notification-content").style.backgroundColor = "red";
+            document.getElementById("payment-message").innerHTML = "Payment Failed";
+        }
+        let Notification = document.getElementById("notification");
+        Notification.classList.remove("hidden");
+        Notification.classList.add("flex");
+        Notification.style.transform = "translateX(0%)";
+    }
+    function closeModal() {
+        let Notification = document.getElementById("notification");
+        Notification.style.transform = "translateX(150%)";
+        Notification.classList.remove("hidden");
+    }
+</script>
+
+
+
+<script>
+    function calculateDonationAmt() {
+        console.log('yep')
+        var donationAmt = document.getElementById("input-donation-amt").value;
+        document.getElementById("donation-amt").innerHTML = donationAmt;
+    }
+</script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    async function clickpay() {
+        // getting data from form
+        const vname = document.getElementById("vname").value;
+        const vbgroup = document.getElementById("vbgroup").value;
+        const vmno = document.getElementById("vmno").value;
+        const vemail = document.getElementById("vemail").value;
+        const vdonationamount = document.getElementById("input-donation-amt").value;
+        const data = {
+            vname,
+            vbgroup,
+            vmno,
+            vemail,
+            vdonationamount
+        }
+        console.log(data);
+        // sending data to server
+        let responseData = await fetch('/visitor/donation', {
+            method: 'POST',
+            headers: {
+                Accept: "application/json",
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        let orderData = await responseData.json();
+        // getting order id from server
+        const orderId = orderData.id;
+        const props = {
+            vdata: data,
+            orderId
+        }
+        pay(props);
+    }
+    async function pay({ vdata, orderId }) {
+        const options = {
+            "key": "rzp_test_GM8EczCZXXCl6Y",
+            "amount": (vdata.vdonationamount * 100).toString(), // 2000 paise = INR 20
+            "name": "Blood Donation",
+            "description": "Donate Blood",
+            "order_id": orderId,
+            "image": "https://i.ibb.co/vJWLKZK/blood-donation.png",
+            "handler": async function (response) {
+                console.log(response);
+                const data = {
+                    vdata,
+                    orderId,
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_signature: response.razorpay_signature
+                }
+                fetch('/visitor/donation/verify', {
+                    method: 'POST',
+                    cache: 'no-cache',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }).then(res => {
+                    console.log(res.body);
+                    if (res.status === 200) {
+                        console.log('passed');
+                        displayNotification("success");
+                        alert('Payment Successful');
+                    } else {
+                        console.log('failed')
+                        displayNotification("failure");
+                        alert('Payment Failed');
+                    }
+                }).catch(err => {
+                    displayNotification("failure");
+                    console.log('not sucsess');
+                })
+            },
+            "prefill": {
+                "name": vdata.vname,
+                "email": vdata.vemail,
+                "contact": vdata.vmno
+            },
+            "notes": {
+                "address": "Hello World"
+            },
+            "theme": {
+                "color": "#F37254"
+            }
+        };
+        const rzp1 = new Razorpay(options);
+        rzp1.open();
+    }
+</script>
