@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const bucket = require('../utils/cosmic');
 
-
-
 router.use('/visitor', require('./visitor/index'));
 router.use('/member', require('./member/index'));
 router.use('/admin', require('./admin/index'));
@@ -37,8 +35,8 @@ router.get('/', async (req, res) => {
             }
         }
 
-        console.log('past events data is ', pastEventsData);
-        console.log('upcoming events data is ', upcomingEventsData);
+        // console.log('past events data is ', pastEventsData);
+        // console.log('upcoming events data is ', upcomingEventsData);
 
         let data = {
             workData: workData,
@@ -46,7 +44,7 @@ router.get('/', async (req, res) => {
             upcomingEventsData: upcomingEventsData
         }
 
-        console.log('data by cosmic is ', data);
+        console.log('data by cosmic is ', data, data.pastEventsData[0].metadata.date);
 
         return res.render('homepage', {
             data: data
