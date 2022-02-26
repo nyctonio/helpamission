@@ -37,7 +37,7 @@
 </div>
 
 
-<div class="py-16 px-4 md:px-6 2xl:px-0 flex justify-center items-center 2xl:mx-auto 2xl:container">
+<div id="donationBox" class="py-16 px-4 md:px-6 2xl:px-0 flex justify-center items-center 2xl:mx-auto 2xl:container">
     <div class="flex flex-col justify-start items-start w-full space-y-9">
         <div
             class="flex flex-col xl:flex-row justify-center xl:justify-between space-y-6 xl:space-y-0 xl:space-x-6 w-full">
@@ -48,7 +48,7 @@
                     <p class="text-base font-semibold leading-none text-black">DONATE</p>
                 </div>
                 <div class="mt-6 sm:mt-0 xl:my-10 xl:px-20 w-52 sm:w-96 xl:w-auto">
-                    <img src="assets/blood-donation1.png" alt="headphones" />
+                    <img src="assets/blood-donation.png" alt="headphones" />
                 </div>
             </div>
 
@@ -141,6 +141,7 @@
 <script>
     async function clickpay() {
         event.preventDefault();
+        showTopLoader();
         // getting data from form
         const vname = document.getElementById("vname").value;
         const vbgroup = document.getElementById("vbgroup").value;
@@ -174,6 +175,7 @@
         pay(props);
     }
     async function pay({ vdata, orderId }) {
+        hideTopLoader();
         const options = {
             "key": "rzp_test_GM8EczCZXXCl6Y",
             "amount": (vdata.vdonationamount * 100).toString(), // 2000 paise = INR 20

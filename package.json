@@ -21,8 +21,10 @@
     "express": "^4.17.3",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.2.2",
+    "nodemailer": "^6.7.2",
     "postcss": "^8.4.6",
     "postcss-cli": "^9.1.0",
+    "puppeteer": "^13.4.0",
     "razorpay": "^2.8.0",
     "shortid": "^2.2.8",
     "tailwindcss": "^3.0.23"

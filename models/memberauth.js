@@ -5,7 +5,25 @@ const memberSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     refferalCode: { type: String, default: shortid.generate(), required: true },
-    refferdBy: { type: String, default: 'nil' },
+    refferdBy: { type: String, default: 'admin' },
+    memberID: {
+        type: String
+    },
+    ownDonations: [
+        {
+            type: String
+        }
+    ],
+    otherDonations: [
+        {
+            type: String
+        }
+    ],
+    addedMembers: [
+        {
+            type: String
+        }
+    ]
 }, { collection: 'membersauth' })
 
 const member = mongoose.model("member", memberSchema);
