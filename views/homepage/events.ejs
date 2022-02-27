@@ -84,7 +84,7 @@
                 <%for (let i of data.upcomingEventsData) {%>
 
                     <div class="border-b mt-2 pb-4 border-gray-400 border-dashed">
-                        <p class="text-xs font-light leading-3 text-gray-500 ">
+                        <p class="uevents-date text-xs font-light leading-3 text-gray-500 ">
                             <%-i.metadata.date%>
                         </p>
                         <a href="/events/<%=i.slug%>" tabindex="0"
@@ -99,7 +99,7 @@
                         <%for (let i of data.pastEventsData) {%>
 
                             <div class="border-b mt-2 pb-4 border-gray-400 border-dashed">
-                                <p class="text-xs font-light leading-3 text-gray-500 ">
+                                <p class="pevents-date text-xs font-light leading-3 text-gray-500 ">
                                     <%-i.metadata.date%>
                                 </p>
                                 <a href="/events/<%=i.slug%>" tabindex="0"
@@ -119,7 +119,7 @@
 <script src="scripts/dynamiccalender.js"></script>
 <script>
     const d = new Date();
-    function showCalender(month) {
+    function showCalender(month, uevents, pevents) {
         let monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         const calender = calenderprovider({ month: month });
         document.getElementById('calender__head').innerHTML = `${monthNames[month]} ${d.getFullYear()}`;
@@ -135,20 +135,49 @@
                 </td>`;
                     element.innerHTML += e;
                 } else {
-                    console.log('no');
-                    const e = `<td class="pt-6">
-            <div class="px-2 py-2 cursor-pointer flex w-full justify-center">
-                <p class="text-base text-gray-500  font-medium">${day}</p>
-            </div>
-        </td>`;
+                    let e =
+                        `<td class="pt-6">
+                    <div class="px-2 py-2 cursor-pointer flex w-full justify-center">${day}</div>
+                </td>`;
+                    uevents.forEach(event => {
+                        if (month == parseInt(event.slice(5, 7)) - 1 && parseInt(event.slice(8, 10)) === day) {
+                            e =
+                                `<td class="pt-6">
+                    <div class="px-2 py-2 cursor-pointer bg-green-400 rounded-full flex w-full justify-center">${day}</div>
+                </td>`;
+                        }
+                    });
+                    pevents.forEach(event => {
+                        if (month == parseInt(event.slice(5, 7)) - 1 && parseInt(event.slice(8, 10)) === day) {
+                            e =
+                                `<td class="pt-6">
+                    <div class="px-2 py-2 cursor-pointer bg-red-400 rounded-full flex w-full justify-center">${day}</div>
+                </td>`;
+                        }
+                    });
                     element.innerHTML += e;
                 }
             })
-            console.log(element.innerHTML);
+            // console.log(element.innerHTML);
             document.getElementById('calender__dates').innerHTML += `<tr>${element.innerHTML}</tr>`;
         });
     };
-    showCalender(d.getMonth());
+    const upcomingeventsdate = document.getElementsByClassName('uevents-date');
+    const uevents = [];
+    console.log(upcomingeventsdate);
+    // upcomingeventsdate.forEach(element => {
+    //     uevents.push(element.innerText);
+    // });
+    for (let i = 0; i < upcomingeventsdate.length; i++) {
+        uevents.push(upcomingeventsdate[i].innerText);
+    }
+    const pasteventsdate = document.getElementsByClassName('pevents-date');
+    const pevents = [];
+    for (let i = 0; i < pasteventsdate.length; i++) {
+        pevents.push(pasteventsdate[i].innerText);
+    }
+    // console.log(uevents, pevents);
+    showCalender(d.getMonth(), uevents, pevents);
     let currentmonth = d.getMonth();
     const changecalup = () => {
         if (currentmonth == 11) {
@@ -156,7 +185,7 @@
         } else {
             currentmonth++;
         }
-        showCalender(currentmonth);
+        showCalender(currentmonth, uevents, pevents);
     }
     const changecaldown = () => {
 
@@ -166,6 +195,7 @@
         else {
             currentmonth--;
         }
-        showCalender(currentmonth);
+        showCalender(currentmonth, uevents, pevents);
     }
+
 </script>
