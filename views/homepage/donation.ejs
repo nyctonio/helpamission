@@ -56,18 +56,29 @@
             <div style="background-color: #000000;" class="p-8 flex flex-col lg:w-full xl:w-3/5">
                 <!-- payment form -->
                 <form onsubmit="clickpay()">
-                    <label class="mt-8 text-base leading-4 text-gray-800 dark:text-gray-50">Help Us : Donate </label>
-                    <div class="mt-6 flex-col">
+                    <label class="mt-8 leading-4 text-bold text-gray-50 text-2xl">Help Us : Donate </label>
+                    <div class="mt-12 flex-col">
                         <div>
                             <input
                                 class="border rounded border-gray-300 p-4 w-full text-base leading-4 placeholder-gray-600 text-gray-600"
                                 name="" required id="vname" placeholder="Name" />
                         </div>
                     </div>
-                    <div class="mt-8">
-                        <input
-                            class="border border-gray-300 p-4 rounded w-full text-base leading-4 placeholder-gray-600 text-gray-600"
-                            type="text" required name="" id="vbgroup" placeholder="Blood Group" />
+                    <div class="text-bold mt-4 text-white">
+                        <h1>Blood-Group</h1>
+                    </div>
+                    <div class="mt-2 grid ">
+                        <select id="vbgroup"
+                            class="border  border-gray-300 rounded-md w-full text-gray-600 h-14 pl-4 pr-10 bg-white hover:border-gray-400 focus:outline-none">
+                            <option>A+</option>
+                            <option>B+</option>
+                            <option>AB+</option>
+                            <option>O+</option>
+                            <option>A-</option>
+                            <option>B-</option>
+                            <option>AB-</option>
+                            <option>O-</option>
+                        </select>
                     </div>
                     <div class="mt-8">
                         <input
