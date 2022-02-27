@@ -1,6 +1,6 @@
 <%for (let i of data.workData.objects) {%>
     <div onclick="workOpener('<%=i.slug%>')" class="cursor-pointer flex flex-shrink-0 relative w-full sm:w-auto">
-        <img style="max-height: 600px;min-height: 600px;min-width: 400px;" src="<%=i.metadata.image.imgix_url%>"
+        <img style="max-height: 600px;min-height: 600px;" src="<%=i.metadata.image.imgix_url%>"
             alt="black chair and white table" class="object-cover object-center w-full" />
         <div class="bg-gray-800 bg-opacity-30 absolute w-full h-full p-6">
             <h2 class="lg:text-xl leading-4 text-base lg:leading-5 text-white ">
