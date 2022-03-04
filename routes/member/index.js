@@ -19,7 +19,6 @@ router.get('/login', (req, res) => {
 
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
-    console.log(req.body, 'hi');
     const { status, data } = await verifyMemberLogin(email, password);
     if (status === 'ok') {
         res.cookie('token', data);
@@ -27,6 +26,22 @@ router.post('/login', async (req, res) => {
     } else {
         res.redirect('/member/login');
     }
+});
+
+router.get('/addmember', (req, res) => {
+    const { token } = req.cookies;
+    if (verifyMemberToken(token)) {
+        res.render('member/addmembers');
+    } else {
+        res.redirect('/member/login')
+    }
+});
+
+
+router.post('/addmember', async (req, res) => {
+    const { email, name, contact, address, city, state, bloodgroup } = req.body;
+    console.log(req.body);
+
 });
 
 module.exports = router;
