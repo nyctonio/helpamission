@@ -1,37 +1,49 @@
 const nodemailer = require('nodemailer');
 require('dotenv').config();
+const ejs = require('ejs');
+const path = require('path');
 
-module.exports.sendFile = async (customerEmail, path, fileName) => {
-    let transporter = nodemailer.createTransport({
-        service: 'gmail',
-        host: 'smtp.gmail.com',
-        port: '587',
-        secure: false,
-        auth: {
-            user: process.env.mail_user,
-            pass: process.env.mail_pass
+let swiggy = nodemailer.createTransport({
+    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    auth: {
+        user: process.env.mail_user,
+        pass: process.env.mail_pass
+    }
+});
+
+
+let renderTemplate = (data, relativePath) => {
+    try {
+        let mailHTML;
+        let templateData = {
+            data,
         }
-    });
+        // console.log('template data is ', templateData);
 
-
-    let mailToUser = {
-        from: 'demo@gmail.com',
-        to: customerEmail,
-
-        attachments: [
-            {
-                filename: fileName,
-                path: path
+        // console.log('in render template function');
+        ejs.renderFile(
+            path.join(__dirname, `../views/pdfTemplates/content/${relativePath}`)
+            ,
+            templateData,
+            function (err, template) {
+                if (err) {
+                    console.log('error in rendering the template', err);
+                    return;
+                }
+                mailHTML = template;
             }
-        ]
+        )
+        return mailHTML;
+    } catch (err) {
+        console.log('error in render html function ', err);
     }
 
+}
 
-    transporter.sendMail(mailToUser, (err, info) => {
-        if (err) {
-            console.log('error in sending mail ', err);
-            return;
-        }
-        console.log('Message sent ', info);
-    })
+
+module.exports = {
+    swiggy, renderTemplate
 }
