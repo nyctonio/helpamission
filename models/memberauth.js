@@ -57,11 +57,13 @@ const memberSchema = new mongoose.Schema({
             type: String
         }
     ],
-    lastPaid: {
+    nextDueDate: {
         type: String,
-        default: 'nil'
+        default: Date.now()
     }
-}, { collection: 'membersauth' })
+}, {
+    timestamps: true
+})
 
 const member = mongoose.model("member", memberSchema);
 

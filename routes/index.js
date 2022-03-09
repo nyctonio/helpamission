@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const bucket = require('../utils/cosmic');
+const { verifyAdminToken, verifyAdminLogin } = require('../utils/adminauthprovider');
+const jwt = require('jsonwebtoken');
+
 
 router.use('/visitor', require('./visitor/index'));
 router.use('/member', require('./member/index'));
@@ -34,18 +37,11 @@ router.get('/', async (req, res) => {
                 upcomingEventsData.push(i);
             }
         }
-
-        // console.log('past events data is ', pastEventsData);
-        // console.log('upcoming events data is ', upcomingEventsData);
-
         let data = {
             workData: workData,
             pastEventsData: pastEventsData,
             upcomingEventsData: upcomingEventsData
         }
-
-        console.log('data by cosmic is ', data, data.pastEventsData[0].metadata.date);
-
         return res.render('homepage', {
             data: data
         });

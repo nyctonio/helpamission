@@ -25,7 +25,7 @@ let renderTemplate = (data, relativePath) => {
 
         // console.log('in render template function');
         ejs.renderFile(
-            path.join(__dirname, `../views/pdfTemplates/content/${relativePath}`)
+            path.join(__dirname, `../views/pdfTemplates/${relativePath}`)
             ,
             templateData,
             function (err, template) {

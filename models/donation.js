@@ -4,11 +4,7 @@ const donationSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    byCash: {
-        type: Boolean,
-        default: false
-    },
-    memberID: {
+    donorID: {
         type: String
     },
     order_id: {
@@ -17,10 +13,6 @@ const donationSchema = new mongoose.Schema({
     payment_id: {
         type: String
     },
-    isRefunded: {
-        type: Boolean,
-        default: false
-    },
     dateAndTime: {
         type: String,
         default: Date.now()
@@ -28,7 +20,14 @@ const donationSchema = new mongoose.Schema({
     donationID: {
         type: Number,
         required: true
-    }
+    },
+    donationType: {
+        type: String,
+        required: true,
+        default: 'razorpay'
+    },
+}, {
+    timestamps: true
 });
 
 const donation = mongoose.model('donation', donationSchema);

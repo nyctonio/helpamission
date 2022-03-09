@@ -1,58 +1,94 @@
-const { swiggy, renderTemplate } = require('../config/nodemailer');
-const path = require('path');
-const fs = require('fs');
+const { swiggy, renderTemplate } = require("../config/nodemailer");
+const path = require("path");
+const { visitorOnlineDonationPDF } = require("./pdfGenerators");
+const fs = require("fs").promises;
 
 // utility function for file removal
 const fileRemover = async (filePath) => {
-    console.log('in file remover');
+    console.log("in file remover");
     fs.unlink(filePath, (err) => {
         if (err) {
-            console.log('error in removing the temp file ', err);
+            console.log("error in removing the temp file ", err);
         }
-        console.log('file removed successfully');
-    })
-}
+        console.log("file removed successfully");
+    });
+};
 
+//----------------------Donation Slips Secions   ----------------------------//
 
-// mailer for online visitor donation slip
-const onlineVisitorDonation = async (donationData, visitorData) => {
+// visitor online donation
+
+const visitorOnlineDonation = async (donationData, visitorData) => {
     try {
+        // calling function to generate pdf
+        await visitorOnlineDonationPDF(donationData, visitorData);
         let wholeData = {
             donationData: donationData,
-            visitorData: visitorData
-        }
+            visitorData: visitorData,
+        };
 
-        let filePath = path.join(__dirname, `../public/pdf/${donationData.donationID}.pdf`);
-        console.log('file path is ', filePath);
+        let htmlData = renderTemplate(wholeData, "content/visitorOnlineDonationContent.ejs");
+        swiggy
+            .sendMail({
+                from: "helpamission1@gmail.com",
+                to: visitorData.email,
+                subject: "Donation Successful",
+                html: htmlData,
+                attachments: [
+                    {
+                        filename: `${donationData.donationID}.pdf`,
+                        path: path.join(
+                            __dirname,
+                            `../public/pdf/${donationData.donationID}.pdf`
+                        ),
+                    },
+                ],
+            })
+            .then(() => {
+                fileRemover(
+                    path.join(__dirname, `../public/pdf/${donationData.donationID}.pdf`)
+                );
+            });
+    } catch (err) {
+        console.log("error in sending online visitor donation mail", err);
+    }
+};
 
-        let htmlData = renderTemplate(wholeData, 'onlineVisitorDonation.ejs');
+// memberFixedDonation
+
+const memberFixedDonation = async () => { };
+
+// member normal donation
+
+const memberNormalDonation = async () => { };
+
+// offline upi donation
+
+const offlineDonation = async (donationData, visitorData) => {
+    try {
+        const { amount, donationID, } = donationData;
+        // console.log(memberDetails);
+        let htmlData = renderTemplate(memberDetails, 'content/memberRegisteration.ejs');
         swiggy.sendMail({
             from: 'helpamission1@gmail.com',
-            to: visitorData.email,
-            subject: "Donation Successful",
-            html: htmlData,
-            attachments: [
-                {
-                    filename: `${donationData.donationID}.pdf`,
-                    path: path.join(__dirname, `../public/pdf/${donationData.donationID}.pdf`)
-                }
-            ]
-        }).then(() => {
-            fileRemover(path.join(__dirname, `../public/pdf/${donationData.donationID}.pdf`))
+            to: memberDetails.email,
+            subject: "Registeration Successful",
+            html: htmlData
         });
-
-        console.log('mail sent successfully')
     } catch (err) {
-        console.log('error in sending online visitor donation mail', err);
+        console.log("error in sending offline donation mail", err);
     }
-}
+};
 
+
+
+// new member registeration mail
 
 // mailer for new registeration of member
 const memberRegisterationMailer = async (memberDetails) => {
     try {
         // console.log(memberDetails);
-        let htmlData = renderTemplate(memberDetails, 'memberRegisteration.ejs');
+        let htmlData = renderTemplate(memberDetails, 'content/memberRegisteration.ejs');
         swiggy.sendMail({
             from: 'helpamission1@gmail.com',
             to: memberDetails.email,
@@ -66,55 +102,6 @@ const memberRegisterationMailer = async (memberDetails) => {
     }
 }
 
-// mailer for donation deadline
-const donationDeadlineMailer = async (memberDetails) => {
-    try {
-        let htmlData = renderTemplate(memberDetails, 'donationDeadline.ejs');
-        swiggy.sendMail({
-            from: 'helpamission1@gmail.com',
-            to: memberDetails.email,
-            subject: "Donation Pending",
-            html: htmlData
-        });
-
-        console.log('mail sent successfully for memberRegisterationMailer')
-    } catch (err) {
-        console.log('error in sending member registeration mail', err);
-    }
-};
-
-// member yearly amount submission
-const memberFixedDonation = async (donationData, memberData) => {
-    try {
-        let wholeData = {
-            donationData: donationData,
-            memberData: memberData
-        }
-
-        let filePath = path.join(__dirname, `../public/pdf/${donationData.donationID}.pdf`);
-        console.log('file path is ', filePath);
-
-        let htmlData = renderTemplate(wholeData, 'memberFixedDonation.ejs');
-        swiggy.sendMail({
-            from: 'helpamission1@gmail.com',
-            to: memberData.email,
-            subject: "Donation Successful",
-            html: htmlData,
-            attachments: [
-                {
-                    filename: `${donationData.donationID}.pdf`,
-                    path: path.join(__dirname, `../public/pdf/${donationData.donationID}.pdf`)
-                }
-            ]
-        }).then(() => {
-            fileRemover(path.join(__dirname, `../public/pdf/${donationData.donationID}.pdf`))
-        });
-
-        console.log('mail sent successfully')
-    } catch (err) {
-        console.log('error in sending member fixed donation mail', err);
-    }
-}
 
 
-module.exports = { onlineVisitorDonation, memberRegisterationMailer, memberFixedDonation, donationDeadlineMailer };
+module.exports = { visitorOnlineDonation, fileRemover, memberFixedDonation, memberRegisterationMailer, memberNormalDonation, offlineDonation };

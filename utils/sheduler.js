@@ -1,26 +1,29 @@
 const schedule = require('node-schedule');
-const fs = require('fs');
-const { donationDeadlineMailer } = require('../mailers/mailers');
-const shedulingData = [];
 const member = require('../models/memberauth');
 
-const getAllShedulingData = () => {
-    // member find
-    // if(next > date.now)
-    // every year(emal)
-    //else
-    // everyday(email)
+const getAllSchedulingData = async () => {
+    console.log('getAllSchedulingData');
+    let membersData = await member.find({});
+    for (let i of membersData) {
+        if (i.nextDueDate > Date.now()) {
+            scheduleforEveryYear(i.email);
+        } else {
+            scheduleforEveryDay(i.email);
+        }
+    }
 }
 
-
-
-const sheduleforEveryDay = (email) => {
-    // check  
-    schedule.scheduleJob('0 0 0 * * *', async () => {
-        // next date 
-        // 
+const scheduleforEveryDay = async (email) => {
+    schedule.scheduleJob(`${email}notification`, '12 18 * * *', async () => {
         try {
-            console.log('hii')
+            let memberData = await member.findOne({ email });
+            if (memberData.nextDueDate > Date.now()) {
+                schedule.cancelJob(`${memberData.email}notification`);
+                console.log('Terminated ', memberData.memberID);
+                scheduleforEveryYear(memberData.email);
+            } else {
+                console.log('sending mail');
+            }
         }
         catch (err) {
             console.log('error in sheduleforEveryDay', err);
@@ -28,20 +31,16 @@ const sheduleforEveryDay = (email) => {
     });
 }
 
-const sheduleforEveryYear = (email) => {
-    // email nextpay 
-    // 
-    schedule.scheduleJob('0 0 0 1 1 *', async () => {
-
-        try {
-        }
-        catch (err) {
-            console.log('error in sheduleforEveryYear', err);
-        }
+const scheduleforEveryYear = async (email) => {
+    let memberData = await member.findOne({ email });
+    let c = await memberData.nextDueDate;
+    console.log('scheduled next year for ', c);
+    schedule.scheduleJob(c, async () => {
+        scheduleforEveryDay(memberData.email);
     });
 }
 
 
 
-module.exports = { sheduleforEveryDay, sheduleforEveryYear };
+module.exports = { scheduleforEveryDay, scheduleforEveryYear, getAllSchedulingData };
 

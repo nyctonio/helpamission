@@ -1,6 +1,5 @@
 const bcrypt = require('bcryptjs');
-const member = require('../../../models/memberauth');
-const donation = require('../../../models/donation');
+const { visitor, donation, member } = require('../../../models');
 
 const hashPassword = async (normalPassword) => {
     const salt = await bcrypt.genSalt(10);
@@ -12,9 +11,10 @@ const hashPassword = async (normalPassword) => {
 const getOwnDetails = async (email) => {
     try {
         let currMember = await member.findOne({ email: email });
-        return res.send(currMember);
+        console.log(currMember);
+        return currMember;
     } catch (err) {
-        return [];
+        return null;
     }
 }
 
@@ -26,7 +26,7 @@ const getAddedMember = async (email) => {
             let tempMember = await member.findOne({ memberID: i });
             membersData.push(tempMember);
         }
-        console.log('members data is ', membersData);
+        // console.log('members data is ', membersData);
         return membersData;
     } catch (error) {
         return [];
@@ -48,8 +48,109 @@ const getOwnDonations = async (email) => {
     }
 }
 
+const getOtherDonations = async (email) => {
+    try {
+        let currMember = await member.findOne({ email: email });
+        let donationData = [];
+        for (let i of currMember.otherDonations) {
+            let tempDonation = await donation.findOne({ donationID: i });
+            donationData.push(tempDonation);
+        }
+        console.log('donation data is ', donationData);
+        return donationData;
+    } catch (error) {
+        return [];
+    }
+}
 
 
+const getMemberDetails = async (memberID) => {
+    try {
+        let currMember = await member.findOne({ memberID: memberID });
+        return currMember;
+    } catch (error) {
+        return [];
+    }
+}
+
+const getVisitorDetails = async (visitorID) => {
+    try {
+        let visitor = await visitor.findOne({ visitorID: visitorID });
+        return visitor;
+    } catch (err) {
+        return [];
+    }
+}
 
 
-module.exports = { hashPassword, getAddedMember, getOwnDonations, getOwnDetails };
+const dataForProfileSection = async (email) => {
+    try {
+        let addedMembers = await getAddedMember(email);
+        let ownDonations = await getOwnDonations(email);
+        let otherDonations = await getOtherDonations(email);
+        let userData = await getOwnDetails(email);
+        let data = {
+            member: [],
+            owndonation: [],
+            otherdonation: [],
+            owndata:
+            {
+                name: userData.name,
+                contact: userData.contact,
+                bloodGroup: userData.bloodGroup,
+                refferalCode: userData.refferalCode,
+                address: userData.address,
+                nextDueDate: userData.nextDueDate,
+                createdAt: userData.createdAt,
+            }
+        };
+        for (let i of addedMembers) {
+            let temp = {
+                memberID: i.memberID,
+                name: i.name,
+                contact: i.contact,
+                bloodGroup: i.bloodGroup,
+                createdAt: i.createdAt,
+            }
+            data.member.push(temp);
+        }
+        for (let i of ownDonations) {
+            let visitorwhodonated = await visitor.findOne({ donationID: i.donationID });
+            let temp = {
+                name: userData.name,
+                donationID: i.donationID,
+                amount: i.amount,
+                createdAt: i.createdAt,
+            }
+            data.owndonation.push(temp);
+        }
+        for (let i of otherDonations) {
+            let visitorwhodonated = await visitor.findOne({ donationID: i.donationID });
+            let temp = {
+                name: visitorwhodonated.name,
+                contact: visitorwhodonated.contact,
+                bloodGroup: visitorwhodonated.bloodGroup,
+                donationID: i.donationID,
+                amount: i.amount,
+                createdAt: i.createdAt,
+            }
+            data.otherdonation.push(temp);
+        }
+        return data;
+    }
+    catch (err) {
+        console.log(err);
+        return [];
+    }
+}
+
+module.exports = {
+    dataForProfileSection,
+    hashPassword,
+    getAddedMember,
+    getOwnDonations,
+    getOwnDetails,
+    getOtherDonations,
+    getMemberDetails,
+    getVisitorDetails
+};
