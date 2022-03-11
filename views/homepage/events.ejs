@@ -81,6 +81,7 @@
         </div>
         <div class="md:py-8 py-5 md:px-16 px-5  bg-gray-50 rounded-b">
             <div class="px-4">
+                <div class="w-full flex justify-center items-center text-green-600">Upcoming Events</div>
                 <%for (let i of data.upcomingEventsData) {%>
 
                     <div class="border-b mt-2 pb-4 border-gray-400 border-dashed">
@@ -88,7 +89,7 @@
                             <%-i.metadata.date%>
                         </p>
                         <a href="/events/<%=i.slug%>" tabindex="0"
-                            class="focus:outline-none text-lg font-medium leading-5 text-gray-800  mt-2">
+                            class="focus:outline-none text-lg font-medium leading-5 text-blue-800  mt-2">
                             <%-i.title%>
                         </a>
                         <div class="text-sm pt-2 leading-4 text-gray-600 ">
@@ -96,6 +97,7 @@
                         </div>
                     </div>
                     <%}%>
+                        <div class="w-full flex justify-center items-center text-red-600">Past Events</div>
                         <%for (let i of data.pastEventsData) {%>
 
                             <div class="border-b mt-2 pb-4 border-gray-400 border-dashed">
@@ -103,7 +105,7 @@
                                     <%-i.metadata.date%>
                                 </p>
                                 <a href="/events/<%=i.slug%>" tabindex="0"
-                                    class="focus:outline-none text-lg font-medium leading-5 text-gray-800  mt-2">
+                                    class="focus:outline-none text-lg font-medium leading-5 text-blue-800  mt-2">
                                     <%-i.title%>
                                 </a>
                                 <div class="text-sm pt-2 leading-4 text-gray-600 ">

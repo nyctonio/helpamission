@@ -22,42 +22,38 @@
                                 <div class="space-y-4">
                                     <div class="flex">
                                         <div>
-                                            <img class="h-40 object-cover mb-4" src="/public/assets/logo-light.svg">
+                                            <!-- <img class="h-40 object-cover mb-4" src="https://raw.githubusercontent.com/karanchugh02/helpaMission/aa98ebff7314b7a41da9d16c9b63b33ab3c6f80b/public/assets/1.svg?token=ARSMUBJSZLM3IS2Q7UI7RMLCFBPJQ"> -->
                                         </div>
                                         <div>
-                                            <p class="font-bold text-lg"> Invoice </p>
-                                            <p> HelpAMission </p>
-                                            <p class="font-medium text-sm text-gray-400"> Billed To </p>
-                                            <p> Member Name </p>
-                                            <p> email@gmail.com </p>
-                                            <p> 1234567890 </p>
+                                            <p class="font-bold text-lg"> Donation Receipt </p>
+                                            <p> Help-A Mission </p>
+                                            <p class="font-medium text-sm text-gray-400"> Recieved From </p>
+                                            <p>
+                                                <%=visitor.name%>
+                                            </p>
+                                            <p>
+                                                <%=visitor.email%>
+                                            </p>
+                                            <p>
+                                                <%=visitor.contact%>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="space-y-2">
                                     <div>
-                                        <p class="font-medium text-sm text-gray-400"> Invoice Number </p>
-                                        <p> INV-000000 </p>
+                                        <p class="font-medium text-sm text-gray-400"> Donation ID </p>
+                                        <p>
+                                            <%=donation.donationID%>
+                                        </p>
                                     </div>
                                     <div>
-                                        <p class="font-medium text-sm text-gray-400"> Invoice Date </p>
-                                        <p> 9 March 2022 </p>
+                                        <p class="font-medium text-sm text-gray-400"> Donation Date </p>
+                                        <p>
+                                            <%=misc.date%>
+                                        </p>
                                     </div>
-                                    <div>
-                                        <a href="#" target="_blank"
-                                            class="inline-flex items-center text-sm font-medium text-blue-500 hover:opacity-75 ">
-                                            Download PDF <svg class="ml-0.5 h-4 w-4 fill-current"
-                                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                                fill="currentColor" aria-hidden="true">
-                                                <path
-                                                    d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z">
-                                                </path>
-                                                <path
-                                                    d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z">
-                                                </path>
-                                            </svg>
-                                        </a>
-                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -69,9 +65,8 @@
                     <table class="w-full divide-y divide-gray-200 text-sm">
                         <thead>
                             <tr>
-                                <th scope="col" class="px-9 py-4 text-left font-semibold text-gray-400"> Member Id
+                                <th scope="col" class="px-9 py-4 text-left font-semibold text-gray-400"> Payment Id
                                 </th>
-                                <th scope="col" class="py-3 text-left font-semibold text-gray-400"> Draft No </th>
                                 <th scope="col" class="py-3 text-left font-semibold text-gray-400"> Mode Of Payment
                                 </th>
                                 <th scope="col" class="py-3 text-left font-semibold text-gray-400"> Amount </th>
@@ -82,12 +77,15 @@
                             <tr>
                                 <td class="px-9 py-5 whitespace-nowrap space-x-1 flex items-center">
                                     <div>
-                                        <p> HAM-1226756 </p>
+                                        <p>
+                                            <%=donation.payment_id%>
+                                        </p>
                                     </div>
                                 </td>
-                                <td class="whitespace-nowrap text-gray-600 truncate"> 1234 </td>
-                                <td class="whitespace-nowrap text-gray-600 truncate"> 2000₹ </td>
-                                <td class="whitespace-nowrap text-gray-600 truncate"> 0% </td>
+                                <td class="whitespace-nowrap text-gray-600 truncate"> Razorpay </td>
+                                <td class="whitespace-nowrap text-gray-600 truncate">
+                                    <%=donation.amount%>₹
+                                </td>
                             </tr>
 
                         </tbody>
@@ -98,7 +96,9 @@
                                 <div>
                                     <p class="text-gray-500 text-sm"> Subtotal </p>
                                 </div>
-                                <p class="text-gray-500 text-sm"> 2000₹ </p>
+                                <p class="text-gray-500 text-sm">
+                                    <%=donation.amount%>₹
+                                </p>
                             </div>
                             <div class="flex justify-between">
                                 <div>
@@ -110,7 +110,9 @@
                                 <div>
                                     <p class="text-gray-500 text-sm"> Total </p>
                                 </div>
-                                <p class="text-gray-500 text-sm"> 2000₹ </p>
+                                <p class="text-gray-500 text-sm">
+                                    <%=donation.amount%>₹
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -120,7 +122,9 @@
                                 <div>
                                     <p class="font-bold text-black text-lg"> Amount Paid </p>
                                 </div>
-                                <p class="font-bold text-black text-lg"> 2000₹ </p>
+                                <p class="font-bold text-black text-lg">
+                                    <%=donation.amount%>₹
+                                </p>
                             </div>
                         </div>
                     </div>

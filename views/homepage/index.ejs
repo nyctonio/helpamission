@@ -49,14 +49,18 @@
 </head>
 
 <body class="overflow-x-hidden">
-    <%-include('header.ejs')-%>
-        <%-include('hero.ejs')-%>
-            <%-include('content.ejs')-%>
-                <%-include('carousels.ejs')-%>
-                    <%-include('donation.ejs')-%>
-                        <%-include('events.ejs')-%>
-                            <%-include('about.ejs')-%>
-                                <%-include('footer.ejs')-%>
+
+    <!-- page loading -->
+    <%-include( '../loadinganimation.ejs' )-%>
+
+        <%-include('header.ejs')-%>
+            <%-include('hero.ejs')-%>
+                <%-include('content.ejs')-%>
+                    <%-include('carousels.ejs')-%>
+                        <%-include('donation.ejs')-%>
+                            <%-include('events.ejs')-%>
+                                <%-include('about.ejs')-%>
+                                    <%-include('footer.ejs')-%>
 </body>
 
 </html>

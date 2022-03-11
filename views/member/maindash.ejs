@@ -262,18 +262,20 @@
                     <i class="mdi mdi-credit-card-outline text-3xl"></i>
                 </div>
             </div>
-            <div class="mb-10 flex flex-col justify-center items-center">
-                <h1 class="text-center font-bold text-xl mb-5 uppercase">Donate On Your Will</h1>
-                <input placeholder="Amount"
-                    class="appearance-none block bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4"
-                    name="contact" type="number">
-            </div>
+            <form onsubmit="willpay()">
+                <div class="mb-10 flex flex-col justify-center items-center">
+                    <h1 class="text-center font-bold text-xl mb-5 uppercase">Donate On Your Will</h1>
+                    <input placeholder="Amount" id="willpayamount"
+                        class="appearance-none block bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4"
+                        name="contact" type="number">
+                </div>
 
-            <div>
-                <button
-                    class="block w-full max-w-xs mx-auto bg-indigo-500 hover:bg-indigo-700 focus:bg-indigo-700 text-white rounded-lg px-3 py-3 font-semibold"><i
-                        class="mdi mdi-lock-outline mr-1"></i> PAY NOW</button>
-            </div>
+                <div>
+                    <button type="submit"
+                        class="block w-full max-w-xs mx-auto bg-indigo-500 hover:bg-indigo-700 focus:bg-indigo-700 text-white rounded-lg px-3 py-3 font-semibold"><i
+                            class="mdi mdi-lock-outline mr-1"></i> PAY NOW</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -281,3 +283,81 @@
 
     </div>
 </main>
+
+
+<script>
+    async function willpay() {
+        event.preventDefault();
+        const willamount = document.getElementById('willpayamount').value;
+        showTopLoader();
+        // sending data to server
+        let responseData = await fetch('/member/normal-member-donation', {
+            method: 'POST',
+            headers: {
+                Accept: "application/json",
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({ amount: willamount })
+        });
+        let orderData = await responseData.json();
+        // getting order id from server
+        const orderId = orderData.order.id;
+        const props = {
+            data: { amount: orderData.amount },
+            orderId
+        }
+        payonwill(props);
+    }
+    async function payonwill({ data, orderId }) {
+        hideTopLoader();
+        console.log(data.amount);
+        const options = {
+            "key": "rzp_test_GM8EczCZXXCl6Y",
+            "amount": (data.amount * 100).toString(), // 2000 paise = INR 20
+            "name": "Blood Donation",
+            "description": "Donate Blood",
+            "order_id": orderId,
+            "image": "https://i.ibb.co/vJWLKZK/blood-donation.png",
+            "handler": function (response) {
+                console.log(response);
+                const sendingdata = {
+                    data: { amount: data.amount },
+                    orderId,
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_signature: response.razorpay_signature
+                }
+                fetch('/member/normal-member-donation/verify', {
+                    method: 'POST',
+                    cache: 'no-cache',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify(sendingdata)
+                }).then(res => {
+                    console.log(res.body);
+                    if (res.status === 200) {
+                        console.log('passed');
+                        alert("success");
+                        // alert('Payment Successful');
+                    } else {
+                        console.log('failed')
+                        alert("failure");
+                        // alert('Payment Failed');
+                    }
+                }).catch(err => {
+                    alert("failure");
+                    console.log('not sucsess');
+                })
+            },
+            "notes": {
+                "address": "Hello World"
+            },
+            "theme": {
+                "color": "#F37254"
+            }
+        };
+        const rzp2 = new Razorpay(options);
+        rzp2.open();
+    }
+</script>

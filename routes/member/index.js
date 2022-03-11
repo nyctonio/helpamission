@@ -1,6 +1,6 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 const {
     hashPassword,
     getAddedMember,
@@ -9,39 +9,37 @@ const {
     getOwnDetails,
     getVisitorDetails,
     getMemberDetails,
-    dataForProfileSection
-} = require('./memberutils');
-const { verifyMemberToken, verifyMemberLogin } = require('../../utils/memberauthprovider');
-const { scheduleforEveryDay, scheduleforEveryYear } = require('../../utils/sheduler');
+    dataForProfileSection,
+} = require("./memberutils");
 const {
-    fileRemover,
-    offlineDonation,
-    memberRegisterationMailer,
-    memberNormalDonation
-} = require('../../mailers/mailers');
+    verifyMemberToken,
+    verifyMemberLogin,
+} = require("../../utils/memberauthprovider");
 const {
-    memberFixedDonationPDF,
-    visitorOnlineDonationPDF,
-    memberNormalDonationPDF,
-    offlineUpiDonationPDF,
-    offlineCashDonationPDF
-} = require('../../mailers/pdfGenerators');
-const { donation, member, visitor } = require('../../models');
-const path = require('path');
+    scheduleforEveryDay,
+    scheduleforEveryYear,
+} = require("../../utils/sheduler");
+
+const { donation, member, visitor } = require("../../models");
+const path = require("path");
 const shortid = require("shortid");
-const Razorpay = require('razorpay');
+const Razorpay = require("razorpay");
 const crypto = require("crypto");
+const {
+    offlineDonationPDF,
+    memberDonationPDF,
+    memberRegisterationMailer,
+} = require("../../mailers/mailer");
 const JWT_SECRET = process.env.jwt;
-require('dotenv').config();
+require("dotenv").config();
 const key_id = process.env.key_id;
 const key_secret = process.env.key_secret;
 const razorpay = new Razorpay({
     key_id,
-    key_secret
+    key_secret,
 });
 
-
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
     const { token } = req.cookies;
     if (verifyMemberToken(token)) {
         const verify = jwt.verify(token, JWT_SECRET);
@@ -68,64 +66,64 @@ router.get('/', async (req, res) => {
         }
         console.log(`Number of added members are ${addedMembers.length}. 
         Own donations are ${sumOwnDonations}. 
-        Other Donations are ${sumOtherDonations}. Donation for this cycle is ${paidStatus}`)
-        res.render('member', {
+        Other Donations are ${sumOtherDonations}. Donation for this cycle is ${paidStatus}`);
+        res.render("member", {
             memberdata: {
                 addedMembers: addedMembers.length,
                 ownDonations: sumOwnDonations,
                 otherDonations: sumOtherDonations,
                 paidStatus,
-            }
+            },
         });
     } else {
-        res.redirect('/member/login')
+        res.redirect("/member/login");
     }
-})
+});
 
-router.get('/login', (req, res) => {
-    res.render('memberlogin');
-})
+router.get("/login", (req, res) => {
+    res.render("memberlogin");
+});
 
-router.post('/login', async (req, res) => {
+router.post("/login", async (req, res) => {
     const { email, password } = req.body;
     const { status, data } = await verifyMemberLogin(email, password);
-    if (status === 'ok') {
-        res.cookie('token', data);
-        res.redirect('/member');
+    if (status === "ok") {
+        res.cookie("token", data);
+        res.redirect("/member");
     } else {
-        res.redirect('/member/login');
+        res.redirect("/member/login");
     }
 });
 
-router.post('/logout', async (req, res) => {
+router.post("/logout", async (req, res) => {
     res.clearCookie("token");
-    res.redirect('/member/login');
+    res.redirect("/member/login");
 });
 
-router.get('/addmember', (req, res) => {
+router.get("/addmember", (req, res) => {
     const { token } = req.cookies;
     if (verifyMemberToken(token)) {
-        res.render('member/addmembers');
+        res.render("member/addmembers");
     } else {
-        res.redirect('/member/login')
+        res.redirect("/member/login");
     }
 });
 
-router.get('/offline-donation', (req, res) => {
+router.get("/offline-donation", (req, res) => {
     const { token } = req.cookies;
     if (verifyMemberToken(token)) {
-        res.render('member/offlinedonation');
+        res.render("member/offlinedonation");
     } else {
-        res.redirect('/member/login')
+        res.redirect("/member/login");
     }
 });
 
-
-
-router.post('/addmember', async (req, res) => {
+router.post("/addmember", async (req, res) => {
     try {
-        const info = { ...req.body, password: '', refferdBy: '', memberID: '' };
-        let normalPassword = `${req.body.city}${Math.floor(1000 + Math.random() * 9000)}`;
+        const info = { ...req.body, password: "", refferdBy: "", memberID: "" };
+        let normalPassword = `${req.body.city}${Math.floor(
+            1000 + Math.random() * 9000
+        )}`;
         console.log(normalPassword);
         info.password = await hashPassword(normalPassword);
         info.memberID = "HAM" + Math.floor(1000 + Math.random() * 9000);
@@ -149,64 +147,66 @@ router.post('/addmember', async (req, res) => {
             }
         });
         console.log(newmem);
-        res.json({ status: 'ok' });
+        res.json({ status: "ok" });
     } catch (error) {
         console.log(error);
-        return res.json({ error, });
+        return res.json({ error });
     }
 });
 
-
-
 // rendering profile section
-router.get('/profile-section', async (req, res) => {
+router.get("/profile-section", async (req, res) => {
     try {
         const { token } = req.cookies;
         const verify = jwt.verify(token, JWT_SECRET);
 
         const profiledata = await dataForProfileSection(verify.username);
-        return res.render('member/profilesection', { profiledata, });
+        return res.render("member/profilesection", { profiledata });
     } catch (err) {
         console.log(err);
-        return res.json({ err })
+        return res.json({ err });
     }
 });
 
-
 // file downloader
-router.get('/download-slip/:donationID', async (req, res, next) => {
+router.get("/download-slip/:donationID", async (req, res, next) => {
     try {
-        let donationDetails = await donation.findOne({ donationID: req.params.donationID });
+        let donationDetails = await donation.findOne({
+            donationID: req.params.donationID,
+        });
         switch (donationDetails.donationType) {
-            case 'visitorOnlineDonation':
+            case "visitorOnlineDonation":
                 let visitorDetails = await getVisitorDetails(donationDetails.visitorID);
                 await visitorOnlineDonationPDF(donationDetails, visitorDetails);
                 break;
-            case 'memberFixedDonation':
+            case "memberFixedDonation":
                 let memberDetails = await getMemberDetails(donationDetails.memberID);
                 await memberFixedDonationPDF(donationDetails, memberDetails);
                 break;
-            case 'memberNormalDonation':
+            case "memberNormalDonation":
                 memberDetails = await getMemberDetails(donationDetails.memberID);
                 await memberNormalDonationPDF(donationDetails, memberDetails);
                 break;
-            case 'offlineUpiDonation':
+            case "offlineUpiDonation":
                 visitorDetails = await getVisitorDetails(donationDetails.visitorID);
                 await offlineUpiDonationPDF(donationDetails, visitorDetails);
                 break;
-            case 'offlineCashDonation':
+            case "offlineCashDonation":
                 visitorDetails = await getVisitorDetails(donationDetails.visitorID);
                 await offlineCashDonationPDF(donationDetails, visitorDetails);
                 break;
         }
-        let file = path.join(__dirname, `../../public/pdf/${donationDetails.donationID}.pdf`);
-        console.log('file is ', file);
-        if (file !== '/') {
+        let file = path.join(
+            __dirname,
+            `../../public/pdf/${donationDetails.donationID}.pdf`
+        );
+        console.log("file is ", file);
+        if (file !== "/") {
             res.download(file, async function (err) {
                 if (err) {
-                    console.log('error in downloading', err);
+                    console.log("error in downloading", err);
                 } else {
-                    console.log('successfully downloaded the file');
+                    console.log("successfully downloaded the file");
                 }
                 setTimeout(() => {
                     fileRemover(file);
@@ -216,14 +216,13 @@ router.get('/download-slip/:donationID', async (req, res, next) => {
             next();
         }
     } catch (err) {
-        console.log('error in downloading the slip', err);
+        console.log("error in downloading the slip", err);
         return res.json({ err });
     }
 });
 
-
 // offline donation
-router.post('/offine-donation', async (req, res) => {
+router.post("/offine-donation", async (req, res) => {
     try {
         const { token } = req.cookies;
         const verify = jwt.verify(token, JWT_SECRET);
@@ -234,8 +233,11 @@ router.post('/offine-donation', async (req, res) => {
             vbgroup,
             vmno,
             vemail,
-            vdonationamount, vaddress, vpaymentmode } = req.body;
-        // checking for visitor 
+            vdonationamount,
+            vaddress,
+            vpaymentmode,
+        } = req.body;
+        // checking for visitor
         let visitorData = await visitor.findOne({ contact: vmno });
         if (!visitorData) {
             visitorData = await visitor.create({
@@ -243,11 +245,11 @@ router.post('/offine-donation', async (req, res) => {
                 bloodGroup: vbgroup,
                 contact: vmno,
                 email: vemail,
-                address: vaddress
+                address: vaddress,
             });
-            console.log('visitor successfully created ', visitorData);
+            console.log("visitor successfully created ", visitorData);
         } else {
-            console.log('visitor already exists');
+            console.log("visitor already exists");
             visitorData.name = vname;
             visitorData.bloodGroup = vbgroup;
             visitorData.contact = vmno;
@@ -256,15 +258,16 @@ router.post('/offine-donation', async (req, res) => {
             await visitorData.save();
         }
         let donationData;
-        const donationType = (vpaymentmode === 'upi') ? 'upi' : 'cash';
+        const donationType =
+            vpaymentmode === "UPI" ? "offlineUpiDonation" : "offlineCashDonation";
         donationData = await donation.create({
             donationID: Date.now(),
             donorID: currMember.memberID,
             amount: vdonationamount,
             donationType,
         });
-        // await offlineDonation(donationData, visitorData);
-        console.log('donation successfully created ', donationData);
+        await offlineDonationPDF(donationData, visitorData, true);
+        console.log("donation successfully created ", donationData);
         // updating member donation
         currMember.otherDonations.push(donationData.donationID);
         await currMember.save();
@@ -272,46 +275,42 @@ router.post('/offine-donation', async (req, res) => {
         visitorData.donations.push(donationData.donationID);
         await visitorData.save();
         return res.json({
-            status: 'success',
-            message: 'go back to previous page',
+            status: "success",
+            message: "go back to previous page",
             donationData,
             currMember,
-            visitorData
+            visitorData,
         });
     } catch (err) {
-        console.log('error in creating donation for member ', err);
+        console.log("error in creating donation for member ", err);
     }
-})
-
-
+});
 
 // normal razorpay donation
 
 // normal member donation
-router.post('/member-donation', async (req, res) => {
+router.post("/normal-member-donation", async (req, res) => {
     const options = {
-        amount: req.body.amount * 100,   //todo add fixed amount
+        amount: req.body.amount * 100, //todo add fixed amount
         currency: "INR",
         receipt: shortid.generate(),
-        payment_capture: 1
+        payment_capture: 1,
     };
     razorpay.orders.create(options, function (err, order) {
         if (err) {
             console.log(err);
             res.send(err);
-        }
-        else {
-            console.log(order);
-            res.send(order);
+        } else {
+            // console.log(order);
+            res.send({ order, amount: req.body.amount });
         }
     });
-})
-
+});
 
 // verification of normal donation
-router.post('/normal-member-donation/verify', (req, res) => {
+router.post("/normal-member-donation/verify", async (req, res) => {
     const body = req.body.razorpay_order_id + "|" + req.body.razorpay_payment_id;
-    const { vdata } = req.body;
+    const { data } = req.body;
     console.log(req.body);
     let expectedSignature = crypto
         .createHmac("sha256", key_secret)
@@ -323,73 +322,59 @@ router.post('/normal-member-donation/verify', (req, res) => {
     if (expectedSignature === req.body.razorpay_signature) {
         response = { status: "success" };
     }
-    if (response.status == 'success') {
-
+    if (response.status == "success") {
+        const { token } = req.cookies;
         const verify = jwt.verify(token, JWT_SECRET);
-        let currMember = member.findOne({ email: verify.username });
+        let currMember = await member.findOne({ email: verify.username });
         // adding the donation in member schema
         donation.create({
-            amount: vdata.vdonationamount,
+            amount: data.amount,
             order_id: req.body.razorpay_order_id,
             payment_id: req.body.razorpay_payment_id,
             donationID: Date.now(),
-            memberID: currMember.memberID,
-            donationType: 'memberNormalDonation'
-        }).then((donateData) => {
-            console.log('donation data is ', donateData);
-            let currOwnDonations = currMember.ownDonations;
-            currOwnDonations.push(donateData.donationID);
-            let data = {
-                ownDonations: currOwnDonations,
-            }
-            member.findByIdAndUpdate(currMember.id, data).then((data) => {
-                console.log('updated member data is ', data);
-            });
+            donorID: currMember.memberID,
+            donationType: "memberNormalDonation",
+        }).then(async (donateData) => {
+            // console.log("donation data is ", donateData, currMember);
+            currMember.ownDonations.push(donateData.donationID);
+            await currMember.save();
             // sending mail for pdf reciept
-            memberNormalDonation(donateData, currMember);
-
-
+            memberDonationPDF(donateData, currMember, true);
         }).catch((err) => {
-            console.log('error in adding new donation ', err);
+            console.log("error in adding new donation ", err);
         });
     }
     console.log(response);
     res.send(response);
 });
 
-
-
-
-
 // fixed amount donation
 
-
-router.post('/fixed-member-donation', async (req, res) => {
+router.post("/fixed-member-donation", async (req, res) => {
     const fixedamount = 1100;
     const options = {
-        amount: fixedamount * 100,   //todo add fixed amount
+        amount: fixedamount * 100, //todo add fixed amount
         currency: "INR",
         receipt: shortid.generate(),
-        payment_capture: 1
+        payment_capture: 1,
     };
     razorpay.orders.create(options, function (err, order) {
         if (err) {
             console.log(err);
             res.send(err);
-        }
-        else {
+        } else {
             console.log(order);
             res.send({ order, fixedamount });
         }
     });
 });
 
-
 // verifying the fixed member donation and setting dues as paid
 
-router.post('/fixed-member-donation/verify', async (req, res) => {
+router.post("/fixed-member-donation/verify", async (req, res) => {
     try {
-        const body = req.body.razorpay_order_id + "|" + req.body.razorpay_payment_id;
+        const body =
+            req.body.razorpay_order_id + "|" + req.body.razorpay_payment_id;
         const { data } = req.body;
         console.log(req.body);
         let expectedSignature = crypto
@@ -402,36 +387,41 @@ router.post('/fixed-member-donation/verify', async (req, res) => {
         if (expectedSignature === req.body.razorpay_signature) {
             response = { status: "success" };
         }
-        if (response.status == 'success') {
+        if (response.status == "success") {
             const { token } = req.cookies;
             const verify = jwt.verify(token, JWT_SECRET);
             let currMember = await member.findOne({ email: verify.username });
             // adding the donation in member schema
-            donation.create({
-                amount: data.amount,
-                order_id: req.body.razorpay_order_id,
-                payment_id: req.body.razorpay_payment_id,
-                donationID: Date.now(),
-                donorID: currMember.memberID,
-            }).then(async (donateData) => {
-                console.log('donation data is ', donateData, currMember);
-                currMember.ownDonations.push(donateData.donationID);
-                const t = new Date(new Date().setFullYear(new Date().getFullYear() + 1));
-                currMember.nextDueDate = t.getTime();
-                await currMember.save();
-                console.log(currMember);
-                // sending mail
-                // calling scheduler
-                scheduleforEveryDay(verify.username);
-            });
+            donation
+                .create({
+                    amount: data.amount,
+                    order_id: req.body.razorpay_order_id,
+                    payment_id: req.body.razorpay_payment_id,
+                    donationID: Date.now(),
+                    donorID: currMember.memberID,
+                    donationType: "memberFixedDonation",
+                })
+                .then(async (donateData) => {
+                    console.log("donation data is ", donateData, currMember);
+                    currMember.ownDonations.push(donateData.donationID);
+                    const t = new Date(
+                        new Date().setFullYear(new Date().getFullYear() + 1)
+                    );
+                    currMember.nextDueDate = t.getTime();
+                    await currMember.save();
+                    console.log(currMember);
+                    // sending mail
+                    memberDonationPDF(donateData, currMember, true);
+                    // calling scheduler
+                    scheduleforEveryDay(verify.username);
+                });
         }
         console.log(response);
         return res.send(response);
     } catch (err) {
-        console.log('error in member fixed donation', err);
+        console.log("error in member fixed donation", err);
         return res.json({ err });
     }
 });
-
 
 module.exports = router;

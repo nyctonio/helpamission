@@ -12,9 +12,10 @@
 
 <body>
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
-    <%- include('sidebar'); -%>
-        <%- include('notification'); -%>
-            <%- include('maindash'); -%>
+    <%-include( '../loadinganimation.ejs' )-%>
+        <%- include('sidebar'); -%>
+            <%- include('notification'); -%>
+                <%- include('maindash'); -%>
 </body>
 
 </html>

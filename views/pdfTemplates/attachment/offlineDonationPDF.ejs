@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF</title>
+    <link rel="stylesheet" type="text/css" href="styles/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="max-w-screen overflow-x-hidden">
+    <!-- component -->
+    <section class="bg-gray-100 py-10">
+        <div class="max-w-2xl mx-auto py-0 md:py-16">
+            <article class="shadow-none md:shadow-md md:rounded-md overflow-hidden">
+                <div class="md:rounded-b-md  bg-white">
+                    <div class="p-9 border-b border-gray-200">
+                        <div class="space-y-6">
+                            <div class="flex justify-between items-top">
+                                <div class="space-y-4">
+                                    <div class="flex">
+                                        <div>
+                                            <img class="h-40 object-cover mb-4" src="/public/assets/1.svg">
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-lg"> Donation Receipt </p>
+                                            <p> Help-A Mission </p>
+                                            <p class="font-medium text-sm text-gray-400"> Recieved From </p>
+                                            <p>
+                                                <%=visitor.name%>
+                                            </p>
+                                            <p>
+                                                <%=visitor.email%>
+                                            </p>
+                                            <p>
+                                                <%=visitor.contact%>
+                                            </p>
+                                            <p>
+                                                <%=visitor.address%>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="space-y-2">
+                                    <div>
+                                        <p class="font-medium text-sm text-gray-400"> Donation ID </p>
+                                        <p>
+                                            <%=donation.donationID%>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-sm text-gray-400"> Donation Date </p>
+                                        <p>
+                                            <%=misc.date%>
+                                        </p>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-9 border-b border-gray-200">
+                        <p class="font-medium text-sm text-gray-400"> Note </p>
+                        <p class="text-sm"> Thank you for your Donation. </p>
+                    </div>
+                    <table class="w-full divide-y divide-gray-200 text-sm">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="px-9 py-4 text-left font-semibold text-gray-400"> Payment Mode
+                                </th>
+                                <th scope="col" class="py-3 text-left font-semibold text-gray-400">
+                                    <%= donation.donationType==='offlineUpiDonation' ? 'Upi Number' : 'Contact No' %>
+                                </th>
+                                <th scope="col" class="py-3 text-left font-semibold text-gray-400"> Referred By </th>
+                                <th scope="col" class="py-3 text-left font-semibold text-gray-400"> Amount </th>
+                                <th scope="col" class="py-3 text-left font-semibold text-gray-400"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-9 py-5 whitespace-nowrap space-x-1 flex items-center">
+                                    <div>
+                                        <p> <b>
+                                                <%= donation.donationType==='offlineUpiDonation' ? 'UPI' : 'Cash' %>
+                                            </b> </p>
+                                    </div>
+                                </td>
+                                <td class="whitespace-nowrap text-gray-600 truncate">
+                                    <%=visitor.contact%>
+                                </td>
+                                <td class="whitespace-nowrap text-gray-600 truncate">
+                                    <%=donation.donorID%>
+                                </td>
+                                <td class="whitespace-nowrap text-gray-600 truncate">
+                                    <%=donation.amount%>₹
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                    <div class="p-9 border-b border-gray-200">
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <div>
+                                    <p class="text-gray-500 text-sm"> Subtotal </p>
+                                </div>
+                                <p class="text-gray-500 text-sm">
+                                    <%=donation.amount%>₹
+                                </p>
+                            </div>
+                            <div class="flex justify-between">
+                                <div>
+                                    <p class="text-gray-500 text-sm"> Tax </p>
+                                </div>
+                                <p class="text-gray-500 text-sm"> 0₹ </p>
+                            </div>
+                            <div class="flex justify-between">
+                                <div>
+                                    <p class="text-gray-500 text-sm"> Total </p>
+                                </div>
+                                <p class="text-gray-500 text-sm">
+                                    <%=donation.amount%>₹
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-9 border-b border-gray-200">
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <div>
+                                    <p class="font-bold text-black text-lg"> Amount Paid </p>
+                                </div>
+                                <p class="font-bold text-black text-lg">
+                                    <%=donation.amount%>₹
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+</body>
+
+</html>
