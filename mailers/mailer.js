@@ -91,7 +91,10 @@ const visitorOnlineDonationPDF = async (
                 misc: misc,
             });
 
-            const browser = await puppeteer.launch();
+            const browser = await puppeteer.launch({
+                args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            });
+
             const page = await browser.newPage();
             await page.setContent(cont);
             let filePath = path.join(__dirname, "../public/pdf");
@@ -181,7 +184,10 @@ const offlineDonationPDF = async (donationData, visitorData, sendMail) => {
 
             // console.log("content is ", cont);
 
-            const browser = await puppeteer.launch();
+            const browser = await puppeteer.launch({
+                args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            });
+
             const page = await browser.newPage();
             await page.setContent(cont);
             let filePath = path.join(__dirname, "../public/pdf");
@@ -273,7 +279,10 @@ const memberDonationPDF = async (donationData, memberData, sendMail) => {
 
             // console.log("content is ", cont);
 
-            const browser = await puppeteer.launch();
+            const browser = await puppeteer.launch({
+                args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            });
+
             const page = await browser.newPage();
             await page.setContent(cont);
             let filePath = path.join(__dirname, "../public/pdf");
