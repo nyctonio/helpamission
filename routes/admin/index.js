@@ -42,6 +42,12 @@ router.get('/get-transactions', (req, res) => {
     res.send('hi');
 })
 
+router.get('/manage-fixed-payments', (req, res) => {
+    res.end();
+})
 
+router.get('/wheel-chair-status', (req, res) => {
+    res.end();
+})
 
 module.exports = router;
