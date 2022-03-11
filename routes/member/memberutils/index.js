@@ -148,6 +148,8 @@ const dataForProfileSection = async (email) => {
     }
 };
 
+
+
 module.exports = {
     dataForProfileSection,
     hashPassword,

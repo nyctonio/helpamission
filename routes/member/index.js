@@ -29,6 +29,8 @@ const {
     offlineDonationPDF,
     memberDonationPDF,
     memberRegisterationMailer,
+    visitorOnlineDonationPDF,
+    fileRemover,
 } = require("../../mailers/mailer");
 const JWT_SECRET = process.env.jwt;
 require("dotenv").config();
@@ -168,53 +170,59 @@ router.get("/profile-section", async (req, res) => {
     }
 });
 
+const helper = async (donationDetails) => {
+    switch (donationDetails.donationType) {
+        case "visitorOnlineDonation":
+            let visitorDetails = await getVisitorDetails(donationDetails.donorID);
+            await visitorOnlineDonationPDF(donationDetails, visitorDetails, false);
+            break;
+        case "memberFixedDonation":
+            let memberDetails = await getMemberDetails(donationDetails.donorID);
+            await memberDonationPDF(donationDetails, memberDetails, false);
+            break;
+        case "memberNormalDonation":
+            memberDetails = await getMemberDetails(donationDetails.donorID);
+            await memberDonationPDF(donationDetails, memberDetails, false);
+            break;
+        case "offlineUpiDonation":
+            visitorDetails = await getVisitorDetails(donationDetails.donorID);
+            await offlineDonationPDF(donationDetails, visitorDetails, false);
+            break;
+        case "offlineCashDonation":
+            visitorDetails = await getVisitorDetails(donationDetails.donorID);
+            await offlineDonationPDF(donationDetails, visitorDetails, false);
+            break;
+    }
+};
+
+
 // file downloader
 router.get("/download-slip/:donationID", async (req, res, next) => {
     try {
         let donationDetails = await donation.findOne({
             donationID: req.params.donationID,
         });
-        switch (donationDetails.donationType) {
-            case "visitorOnlineDonation":
-                let visitorDetails = await getVisitorDetails(donationDetails.visitorID);
-                await visitorOnlineDonationPDF(donationDetails, visitorDetails);
-                break;
-            case "memberFixedDonation":
-                let memberDetails = await getMemberDetails(donationDetails.memberID);
-                await memberFixedDonationPDF(donationDetails, memberDetails);
-                break;
-            case "memberNormalDonation":
-                memberDetails = await getMemberDetails(donationDetails.memberID);
-                await memberNormalDonationPDF(donationDetails, memberDetails);
-                break;
-            case "offlineUpiDonation":
-                visitorDetails = await getVisitorDetails(donationDetails.visitorID);
-                await offlineUpiDonationPDF(donationDetails, visitorDetails);
-                break;
-            case "offlineCashDonation":
-                visitorDetails = await getVisitorDetails(donationDetails.visitorID);
-                await offlineCashDonationPDF(donationDetails, visitorDetails);
-                break;
-        }
-        let file = path.join(
-            __dirname,
-            `../../public/pdf/${donationDetails.donationID}.pdf`
-        );
-        console.log("file is ", file);
-        if (file !== "/") {
-            res.download(file, async function (err) {
-                if (err) {
-                    console.log("error in downloading", err);
-                } else {
-                    console.log("successfully downloaded the file");
-                }
-                setTimeout(() => {
-                    fileRemover(file);
-                }, 5000);
-            });
-        } else {
-            next();
-        }
+        helper(donationDetails).then(() => {
+            let file = path.join(
+                __dirname,
+                `../../public/pdf/${donationDetails.donationID}.pdf`
+            );
+            console.log("file is ", file);
+            if (file !== "/") {
+                res.download(file, async function (err) {
+                    if (err) {
+                        console.log("error in downloading", err);
+                    } else {
+                        console.log("successfully downloaded the file");
+                    }
+                    setTimeout(() => {
+                        fileRemover(file);
+                    }, 5000);
+                });
+            } else {
+                next();
+            }
+        });
     } catch (err) {
         console.log("error in downloading the slip", err);
         return res.json({ err });

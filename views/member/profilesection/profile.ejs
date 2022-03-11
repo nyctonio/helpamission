@@ -90,6 +90,12 @@
                     <th class="px-4 py-2 " style="background-color:#f8f8f8">Donation ID</th>
                     <th class="px-4 py-2 " style="background-color:#f8f8f8">Amount</th>
                     <th class="px-4 py-2 " style="background-color:#f8f8f8">Payment ID</th>
+
+                    <th class="px-4 py-2 " style="background-color:#f8f8f8">
+                        <div class="flex justify-center items-center text-center">
+                            Download Slip
+                        </div>
+                    </th>
                 </tr>
             </thead>
             <tbody class="text-sm font-normal text-gray-700">
@@ -110,6 +116,14 @@
                         </td>
                         <td class="px-4 py-4">
                             <%-data.payment_id%>
+                        </td>
+                        <td class="px-4 py-4">
+                            <div class="flex justify-center cursor-pointer items-center">
+                                <a target="_blank" href="/member/download-slip/<%-data.donationID%>">
+                                    <img src="https://s2.svgbox.net/hero-outline.svg?ic=download&color=90EE90"
+                                        width="32" height="32">
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     <% }) %>

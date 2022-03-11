@@ -29,4 +29,19 @@ router.post('/login', async (req, res) => {
     }
 });
 
+router.post('/logout', (req, res) => {
+    res.clearCookie('token');
+    res.redirect('/admin/login');
+});
+
+router.get('/get-members', (req, res) => {
+    res.send('hi');
+})
+
+router.get('/get-transactions', (req, res) => {
+    res.send('hi');
+})
+
+
+
 module.exports = router;

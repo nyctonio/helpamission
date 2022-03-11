@@ -91,6 +91,11 @@
                             type="email" required name="" id="vemail" placeholder="Email" />
                     </div>
                     <div class="mt-8">
+                        <input
+                            class="border border-gray-300 p-4 rounded w-full text-base leading-4 placeholder-gray-600 text-gray-600"
+                            type="text" required name="" id="vaddress" placeholder="Address" />
+                    </div>
+                    <div class="mt-8">
                         <input oninput="calculateDonationAmt()"
                             class="border border-gray-300 p-4 rounded w-full text-base leading-4 placeholder-gray-600 text-gray-600"
                             type="text" required name="" id="input-donation-amt" placeholder="Amount" />
@@ -159,12 +164,14 @@
         const vmno = document.getElementById("vmno").value;
         const vemail = document.getElementById("vemail").value;
         const vdonationamount = document.getElementById("input-donation-amt").value;
+        const vaddress = document.getElementById("vaddress").value;
         const data = {
             vname,
             vbgroup,
             vmno,
             vemail,
-            vdonationamount
+            vdonationamount,
+            vaddress
         }
         console.log(data);
         // sending data to server

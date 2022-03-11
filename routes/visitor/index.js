@@ -19,7 +19,8 @@ router.post('/donation', async (req, res) => {
         vbgroup,
         vmno,
         vemail,
-        vdonationamount } = req.body;
+        vdonationamount,
+        vaddress } = req.body;
 
     // checking for visitor 
     let check = await visitor.findOne({ contact: vmno });
@@ -32,6 +33,7 @@ router.post('/donation', async (req, res) => {
             bloodGroup: vbgroup,
             contact: vmno,
             email: vemail,
+            address: vaddress
         });
         console.log('visitor successfully created ', visitorData);
     }
@@ -73,23 +75,11 @@ router.post('/donation/verify', (req, res) => {
             order_id: req.body.razorpay_order_id,
             payment_id: req.body.razorpay_payment_id,
             donationID: Date.now()
-        }).then((donateData) => {
+        }).then(async (donateData) => {
             console.log('donation details are ', donateData);
-            visitor.findOne({ contact: vdata.vmno }).then((data) => {
-                if (data) {
-                    let currDonations = [];
-                    if (data.donations.length > 0) {
-                        for (let i of data.donations) {
-                            currDonations.push(i);
-                        }
-                    }
-                    currDonations.push(donateData.donationID);
-                    console.log('donations are ', currDonations);
-                    visitor.findByIdAndUpdate(data.id, { donations: currDonations, contact: vdata.vmno, email: vdata.vemail }).then((updatedData) => {
-                        console.log('successfully added new donation in ', updatedData);
-                    });
-                }
-            })
+            const currvisitor = await visitor.findOne({ contact: vdata.vmno });
+            currvisitor.donations.push(donateData.donationID);
+            await currvisitor.save();
         }).catch((err) => {
             console.log('error in adding new donation ', err);
         });
@@ -100,3 +90,19 @@ router.post('/donation/verify', (req, res) => {
 
 
 module.exports = router;
+
+// .then((data) => {
+//     if (data) {
+//         let currDonations = [];
+//         if (data.donations.length > 0) {
+//             for (let i of data.donations) {
+//                 currDonations.push(i);
+//             }
+//         }
+//         currDonations.push(donateData.donationID);
+//         console.log('donations are ', currDonations);
+//         visitor.findByIdAndUpdate(data.id, { donations: currDonations, contact: vdata.vmno, email: vdata.vemail }).then((updatedData) => {
+//             console.log('successfully added new donation in ', updatedData);
+//         });
+//     }
+// })
