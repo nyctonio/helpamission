@@ -24,7 +24,7 @@ const donationSchema = new mongoose.Schema({
     donationType: {
         type: String,
         required: true,
-        default: 'razorpay'
+        default: 'visitorOnlineDonation'
     },
 }, {
     timestamps: true

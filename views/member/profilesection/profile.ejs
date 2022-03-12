@@ -1,10 +1,45 @@
 <!-- component -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    let flag = {
+        'personal-info': true,
+        'own-donation': true,
+        'offline-donation': true,
+        'added-members': true
+    };
+    const dropdownHandler = (params) => {
+        let dropdown = document.getElementById(params);
+        let open1 = document.getElementById(`${params}-open`);
+        let close1 = document.getElementById(`${params}-close`);
+        if (!flag.params) {
+            dropdown.classList.add("opacity-0");
+            dropdown.classList.add("-translate-y-4");
+            setTimeout(() => {
+                dropdown.classList.add("hidden");
+            }, 200);
+            open1.classList.add("hidden");
+            close1.classList.remove("hidden");
+            flag.params = true;
+        } else {
+            dropdown.classList.remove("hidden");
+            setTimeout(() => {
+                dropdown.classList.remove("opacity-0");
+                dropdown.classList.remove("-translate-y-4");
+            }, 200);
+            close1.classList.add("hidden");
+            open1.classList.remove("hidden");
+            flag.params = false;
+        }
+        console.log(flag.params);
+    };
+</script>
+
 <div class="p-4">
     <button
-        class="focus:outline-none w-full focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:bg-gray-100 p-4 shadow rounded bg-white text-sm font-medium leading-none text-gray-800 flex items-center justify-between cursor-pointer"
+        class="focus:outline-none w-full z-100 focus:ring-2 focus:ring-offset-2 -tr focus:ring-gray-500 focus:bg-gray-100 p-4 shadow rounded bg-white text-sm font-medium leading-none text-gray-800 flex items-center justify-between cursor-pointer"
         onclick="dropdownHandler('personal-info')">
         Personal Information
-        <div>
+        <div class="">
             <div class="hidden" id="personal-info-close">
                 <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5.00016 0.666664L9.66683 5.33333L0.333496 5.33333L5.00016 0.666664Z" fill="#1F2937" />
@@ -17,7 +52,8 @@
             </div>
         </div>
     </button>
-    <div class="w-full mt-2 p-4 bg-white shadow overflow-x-scroll md:overflow-x-hidden rounded" id="personal-info">
+    <div class="w-full -z-10 mt-2 p-4 bg-white shadow overflow-x-scroll md:overflow-x-hidden transform transition-all duration-200 rounded"
+        id="personal-info">
 
         <!-- list  -->
         <table class="table-auto border-collapse w-full">
@@ -79,7 +115,8 @@
             </div>
         </div>
     </button>
-    <div class="w-full mt-2 p-4 bg-white shadow overflow-x-scroll md:overflow-x-hidden rounded" id="own-donation">
+    <div class="w-full mt-2 p-4 bg-white shadow overflow-x-scroll md:overflow-x-hidden transform transition-all duration-200 rounded"
+        id="own-donation">
 
         <!-- list  -->
         <table class="table-auto border-collapse w-full">
@@ -153,7 +190,8 @@
             </div>
         </div>
     </button>
-    <div class="w-full mt-2 p-4 bg-white shadow overflow-x-scroll md:overflow-x-hidden rounded" id="offline-donation">
+    <div class="w-full mt-2 p-4 bg-white shadow overflow-x-scroll md:overflow-x-hidden transform transition-all duration-200 rounded"
+        id="offline-donation">
 
         <table class="table-auto border-collapse w-full">
             <thead>
@@ -223,7 +261,8 @@
             </div>
         </div>
     </button>
-    <div class="w-full mt-2 p-4 bg-white shadow overflow-x-scroll md:overflow-x-hidden rounded" id="added-members">
+    <div class="w-full mt-2 p-4 bg-white shadow overflow-x-scroll md:overflow-x-hidden transform transition-all duration-200 rounded"
+        id="added-members">
         <table class="table-auto border-collapse w-full">
             <thead>
                 <tr class="rounded-lg text-sm font-medium text-gray-700 text-left" style="font-size: 0.9674rem">
@@ -263,33 +302,8 @@
     </div>
 </div>
 
-<script>
 
 
-    let flag = {
-        'personal-info': true,
-        'own-donation': true,
-        'offline-donation': true,
-        'added-members': true
-    };
-    const dropdownHandler = (params) => {
-        let dropdown = document.getElementById(params);
-        let open1 = document.getElementById(`${params}-open`);
-        let close1 = document.getElementById(`${params}-close`);
-        if (!flag.params) {
-            dropdown.classList.add("hidden");
-            open1.classList.add("hidden");
-            close1.classList.remove("hidden");
-            flag.params = true;
-        } else {
-            dropdown.classList.remove("hidden");
-            close1.classList.add("hidden");
-            open1.classList.remove("hidden");
-            flag.params = false;
-        }
-        console.log(flag.params);
-    };
-</script>
 
 
 

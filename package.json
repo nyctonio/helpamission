@@ -25,6 +25,7 @@
     "mongoose": "^6.2.2",
     "node-schedule": "^2.1.0",
     "nodemailer": "^6.7.2",
+    "perf_hooks": "^0.0.1",
     "postcss": "^8.4.6",
     "postcss-cli": "^9.1.0",
     "puppeteer": "^13.4.0",
