@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Member Panel</title>
     <link rel="stylesheet" type="text/css" href="styles/style.css">
-    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body>
@@ -15,9 +14,7 @@
     <%-include( '../loadinganimation.ejs' )-%>
         <%- include('sidebar'); -%>
             <%- include('notification'); -%>
-                <div class="overflow-y-scroll flex justify-center pt-48 sm:pt-0 items-center">
-                    <%- include('maindash'); -%>
-                </div>
+                <%- include('maindash'); -%>
 </body>
 
 </html>

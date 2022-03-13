@@ -3,8 +3,7 @@ const shortid = require("shortid");
 const crypto = require("crypto");
 const router = express.Router();
 const Razorpay = require('razorpay');
-const donation = require('../../models/donation');
-const visitor = require('../../models/visitor');
+const { donation, visitor, wheel } = require('../../models');
 require('dotenv').config();
 const key_id = process.env.key_id;
 const key_secret = process.env.key_secret;
@@ -55,6 +54,19 @@ router.post('/donation', async (req, res) => {
     });
 });
 
+
+router.post('/getwheelchair', async (req, res) => {
+    try {
+        console.log('req.body ', req.body);
+        let wheelData = await wheel.create({ ...req.body });
+        console.log(wheelData);
+        res.send({ status: true, data: wheelData });
+    } catch (error) {
+        console.log(error);
+        res.json({ status: false, error: error })
+    }
+})
+
 router.post('/donation/verify', (req, res) => {
     const body = req.body.razorpay_order_id + "|" + req.body.razorpay_payment_id;
     const { vdata } = req.body;
@@ -90,19 +102,3 @@ router.post('/donation/verify', (req, res) => {
 
 
 module.exports = router;
-
-// .then((data) => {
-//     if (data) {
-//         let currDonations = [];
-//         if (data.donations.length > 0) {
-//             for (let i of data.donations) {
-//                 currDonations.push(i);
-//             }
-//         }
-//         currDonations.push(donateData.donationID);
-//         console.log('donations are ', currDonations);
-//         visitor.findByIdAndUpdate(data.id, { donations: currDonations, contact: vdata.vmno, email: vdata.vemail }).then((updatedData) => {
-//             console.log('successfully added new donation in ', updatedData);
-//         });
-//     }
-// })

@@ -1,0 +1,100 @@
+<main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
+    <div class="flex px-2 md:px-20 flex-col mt-8">
+        <div class="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+            <form action="/member/addmember" method="post">
+                <div class="w-full space-y-8 p-10 bg-white rounded-xl shadow-lg z-10">
+                    <div class="grid gap-8 grid-cols-1">
+                        <div class="flex flex-col ">
+                            <div class="mt-5">
+                                <div class="form">
+                                    <div class="md:space-y-2 mb-3">
+                                        <label class="text-2xl font-semibold text-gray-600 py-2">Add New Members<abbr
+                                                class="hidden" title="required">*</abbr></label>
+                                    </div>
+                                    <div class="md:flex flex-row md:space-x-4 w-full text-xs">
+                                        <div class="mb-3 space-y-2 w-full text-xs">
+                                            <label class="font-semibold text-gray-600 py-2">Member Name <abbr
+                                                    title="required">*</abbr></label>
+                                            <input placeholder="Member Name"
+                                                class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4"
+                                                required="required" name="name" type="text">
+                                            <p class="text-red text-xs hidden">Please fill out this field.</p>
+                                        </div>
+                                        <div class="mb-3 space-y-2 w-full text-xs">
+                                            <label class="font-semibold text-gray-600 py-2">Member Mail <abbr
+                                                    title="required">*</abbr></label>
+                                            <input placeholder="Email ID"
+                                                class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4"
+                                                required="required" name="email" type="email">
+                                            <p class="text-red text-xs hidden">Please fill out this field.</p>
+                                        </div>
+                                    </div>
+                                    <div class="md:flex md:flex-row md:space-x-4 w-full text-xs">
+                                        <div class="w-full flex flex-col mb-3">
+                                            <label class="font-semibold text-gray-600 py-2">Contact</label>
+                                            <input placeholder="Address"
+                                                class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4"
+                                                name="contact" type="number">
+                                        </div>
+                                        <div class="w-full flex flex-col mb-3">
+                                            <label class="font-semibold text-gray-600 py-2">Blood Group<abbr
+                                                    title="required">*</abbr></label>
+                                            <select
+                                                class="block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4 md:w-full "
+                                                required="required" name="bloodGroup" id="integration_city_id">
+                                                <option>A</option>
+                                                <option>B</option>
+                                                <option>AB+</option>
+                                                <option>O+</option>
+                                                <option>A-</option>
+                                                <option>B-</option>
+                                                <option>AB-</option>
+                                                <option>O-</option>
+                                            </select>
+                                            <p class="text-sm text-red-500 hidden mt-3" id="error">Please fill out this
+                                                field.</p>
+                                        </div>
+                                    </div>
+                                    <div class="md:flex md:flex-row md:space-x-4 w-full text-xs">
+                                        <div class="w-full flex flex-col mb-3">
+                                            <label class="font-semibold text-gray-600 py-2">Address</label>
+                                            <input placeholder="Address"
+                                                class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4 py-10"
+                                                name="address" type="text">
+                                        </div>
+                                    </div>
+                                    <div class="md:flex flex-row md:space-x-4 w-full text-xs">
+                                        <div class="mb-3 space-y-2 w-full text-xs">
+                                            <label class="font-semibold text-gray-600 py-2">City<abbr
+                                                    title="required">*</abbr></label>
+                                            <input placeholder="City"
+                                                class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4"
+                                                required="required" name="city" type="text">
+                                            <p class="text-red text-xs hidden">Please fill out this field.</p>
+                                        </div>
+                                        <div class="mb-3 space-y-2 w-full text-xs">
+                                            <label class="font-semibold text-gray-600 py-2">State<abbr
+                                                    title="required">*</abbr></label>
+                                            <input placeholder="State"
+                                                class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4"
+                                                required="required" type="text" name="state">
+                                            <p class="text-red text-xs hidden">Please fill out this field.</p>
+                                        </div>
+                                    </div>
+                                    <p class="text-xs text-red-500 text-right my-3">Required fields are marked with an
+                                        asterisk <abbr title="Required field">*</abbr></p>
+                                    <div class="mt-5 text-right md:space-x-3 md:block flex flex-col-reverse">
+                                        <button type="submit"
+                                            class="mb-2 md:mb-0 bg-green-400 px-5 py-2 text-sm shadow-sm font-medium tracking-wider text-white rounded-full hover:shadow-lg hover:bg-green-500">Add
+                                            Member</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</main>

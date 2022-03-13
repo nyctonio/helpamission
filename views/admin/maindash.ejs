@@ -1,0 +1,84 @@
+<!-- component -->
+<!-- component -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 p-4">
+
+
+    <!-- component -->
+    <!-- This is an example component -->
+    <div class="col-span-1 container mx-auto py-12 px-4">
+        <div
+            class="inline-grid max-w-xs sm:max-w-xs lg:max-w-lg lg:flex bg-black rounded-lg border shadow-lg pb-6 lg:pb-0">
+            <div class="w-full lg:w-2/3 p-4">
+                <div class="inline-grid">
+                    <p class="work-sans font-semibold text-xl text-white">Our Total Members</p>
+                    <p class="raleway text-sm my-4 text-white opacity-75">Total No Of Members That Joined Our NGO Till
+                        Now are
+                        <%-dashboarddata.memberCount%>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-center -mt-8 rounded-b-lg max-w-xs lg:max-w-lg lg:-mt-8 lg:justify-end lg:pr-8 py-1">
+            <button type="button" class="text-white py-3 px-4 rounded-lg bg-blue-500 hover:scale-110 hover:bg-blue-400">
+                <p class="work-sans font-semibold text-sm tracking-wide">View Complete Info</p>
+            </button>
+        </div>
+    </div>
+
+    <div class="col-span-1 container mx-auto py-12 px-4">
+        <div
+            class="inline-grid max-w-xs sm:max-w-xs lg:max-w-lg lg:flex bg-black rounded-lg border shadow-lg pb-6 lg:pb-0">
+            <div class="w-full lg:w-2/3 p-4">
+                <div class="inline-grid">
+                    <p class="work-sans font-semibold text-xl text-white">Our Offline Donations</p>
+                    <p class="raleway text-sm my-4 text-white opacity-75">Total No Of Offline Donations we got is <span
+                            class="font-semibold">
+                            <%-dashboarddata.offlineDonation.count%>
+                        </span> Of Amount <span class="font-semibold">
+                            <%-dashboarddata.offlineDonation.amount%>₹
+                        </span>
+
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-center -mt-8 rounded-b-lg max-w-xs lg:max-w-lg lg:-mt-8 lg:justify-end lg:pr-8 py-1">
+            <button type="button" class="text-white py-3 px-4 rounded-lg bg-blue-500 hover:scale-110 hover:bg-blue-400">
+                <p class="work-sans font-semibold text-sm tracking-wide">View Complete Info</p>
+            </button>
+        </div>
+    </div>
+    <div class="col-span-1 container mx-auto py-12 px-4">
+        <div
+            class="inline-grid max-w-xs sm:max-w-xs lg:max-w-lg lg:flex bg-black rounded-lg border shadow-lg pb-6 lg:pb-0">
+            <div class="w-full lg:w-2/3 p-4">
+                <div class="inline-grid">
+                    <p class="work-sans font-semibold text-xl text-white">Our Online Donations</p>
+                    <p class="raleway text-sm my-4 text-white opacity-75">Total No Of Online Donations we got is <span
+                            class="font-semibold">
+                            <%-dashboarddata.onlineDonation.count%>
+                        </span> Of Amount <span class="font-semibold">
+                            <%-dashboarddata.onlineDonation.amount%>₹
+                        </span>
+
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-center -mt-8 rounded-b-lg max-w-xs lg:max-w-lg lg:-mt-8 lg:justify-end lg:pr-8 py-1">
+            <button type="button" class="text-white py-3 px-4 rounded-lg bg-blue-500 hover:scale-110 hover:bg-blue-400">
+                <p class="work-sans font-semibold text-sm tracking-wide">View Complete Info</p>
+            </button>
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+<!-- dashboarddata 
+memberCount
+onlineDonation
+offlineDonation -->

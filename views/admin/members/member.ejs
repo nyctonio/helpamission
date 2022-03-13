@@ -1,6 +1,8 @@
 <script>
     let flag = {
         'member-info': true,
+        'add-member': true,
+        'notdonated': true
     };
     const dropdownHandler = (params) => {
         let dropdown = document.getElementById(params);
@@ -27,6 +29,10 @@
         }
         console.log(flag.params);
     };
+
+
+    // excel sheet manager
+
 </script>
 
 <div class="p-4">
@@ -58,10 +64,10 @@
                     <th class="px-4 py-2 bg-gray-200 " style="background-color:#f8f8f8">Member ID</th>
                     <th class="px-4 py-2 " style="background-color:#f8f8f8">Contact</th>
                     <th class="px-4 py-2 " style="background-color:#f8f8f8">Blood Group</th>
+                    <th class="px-4 py-2 " style="background-color:#f8f8f8">Added By</th>
                     <th class="px-4 py-2 " style="background-color:#f8f8f8">Members Added</th>
                     <th class="px-4 py-2 " style="background-color:#f8f8f8">Total Own Donation</th>
                     <th class="px-4 py-2 " style="background-color:#f8f8f8">Total Other Donations</th>
-                    <th class="px-4 py-2 " style="background-color:#f8f8f8">Download Complete Excel</th>
                 </tr>
             </thead>
             <tbody class="text-sm font-normal text-gray-700">
@@ -80,28 +86,510 @@
                             <%-data.bloodGroup%>
                         </td>
                         <td class="px-4 py-4">
+                            <%-data.refferdBy%>
+                        </td>
+                        <td class="px-4 py-4 font-bold cursor-pointer text-green-800"
+                            onclick='addedMembersDownloader("<%=data.memberID%>")'>
                             <%-data.addedMembers%>
                         </td>
-                        <td class="px-4 py-4">
+                        <td class="px-4 py-4 font-bold cursor-pointer text-green-800"
+                            onclick='ownDonationDownloader("<%=data.memberID%>")'>
                             <%-data.ownDonations%>
                         </td>
-                        <td class="px-4 py-4">
+                        <td class="px-4 py-4 font-bold cursor-pointer text-green-800"
+                            onclick='otherDonationDownloader("<%=data.memberID%>")'>
                             <%-data.otherDonations%>
                         </td>
+                    </tr>
+                    <% }) %>
+            </tbody>
+        </table>
+        <button onclick="fullPageDownloader()"
+            class="focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 focus:outline-none focus:bg-indigo-200 text-xs bg-indigo-100 hover:bg-indigo-200 rounded-md mt-6 font-medium py-2 w-full leading-3 text-indigo-700">Download
+            Excel</button>
+    </div>
+</div>
+
+
+
+
+
+
+<div class="p-4">
+    <button
+        class="focus:outline-none w-full z-100 focus:ring-2 focus:ring-offset-2 -tr focus:ring-gray-500 focus:bg-gray-100 p-4 shadow rounded bg-white text-sm font-medium leading-none text-gray-800 flex items-center justify-between cursor-pointer"
+        onclick="dropdownHandler('notdonated')">
+        Members Not Donated
+        <div class="">
+            <div class="hidden" id="notdonated-close">
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5.00016 0.666664L9.66683 5.33333L0.333496 5.33333L5.00016 0.666664Z" fill="#1F2937" />
+                </svg>
+            </div>
+            <div id="notdonated-open">
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5.00016 5.33333L0.333496 0.666664H9.66683L5.00016 5.33333Z" fill="#1F2937" />
+                </svg>
+            </div>
+        </div>
+    </button>
+    <div class="w-full -z-10 mt-2 p-4 bg-white shadow overflow-x-scroll md:overflow-x-hidden transform transition-all duration-200 rounded"
+        id="notdonated">
+
+        <!-- list  -->
+        <table class="table-auto border-collapse w-full">
+            <thead>
+                <tr class="rounded-lg text-sm font-medium text-gray-700 text-left" style="font-size: 0.9674rem">
+                    <th class="px-4 py-2 bg-gray-200 " style="background-color:#f8f8f8">Member ID</th>
+                    <th class="px-4 py-2 " style="background-color:#f8f8f8">Contact</th>
+                    <th class="px-4 py-2 " style="background-color:#f8f8f8">Email</th>
+                    <th class="px-4 py-2 " style="background-color:#f8f8f8">Due Date</th>
+                    <th class="px-4 py-2 " style="background-color:#f8f8f8">Pay For Them</th>
+                </tr>
+            </thead>
+            <tbody class="text-sm font-normal text-gray-700">
+                <% paymentdata.defaulters.forEach(function(data){ %>
+                    <tr class="hover:bg-gray-100 border-b border-gray-200 py-10">
+                        <td class="px-4 py-4">
+                            <%-data.memberID%>
+                        </td>
+                        <td class="px-4 py-4">
+                            <%-data.contact%>
+                        </td>
+                        <td class="px-4 py-4">
+                            <%-data.email%>
+                        </td>
+                        <td class="px-4 py-4">
+                            <%-data.nextDueDate%>
+                        </td>
                         <td>
-                            <button
+                            <button onclick="addPayAlert({flag:false,id:'<%-data._id%>'})"
                                 class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-1 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
-                                Download
+                                Issue
                             </button>
                         </td>
                     </tr>
                     <% }) %>
             </tbody>
         </table>
+    </div>
+</div>
+
+
+
+
+
+
+<div class="relative flex justify-center items-center">
+    <div id="payalert" class="z-10 w-full h-full hidden bg-gray-900 bg-opacity-80 top-0 fixed sticky-0">
+        <div class="w-full h-full flex justify-center items-center">
+            <div class="grid place-items-center">
+                <div class="w-11/12 p-12 bg-white">
+                    <h1 class="text-xl font-semibold">Hello there 👋, <span class="font-normal">fill in your
+                            information of the
+                            donor</span></h1>
+                    <form class="mt-6" action="/admin/fixed-donation" method="post">
+                        <label class="block mt-2 text-xs font-semibold text-gray-600 uppercase">Donation
+                            Amount</label>
+                        <input type="number" name="vdonationamount" placeholder="amount"
+                            class="block w-full p-3 mt-2 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner"
+                            required />
+
+                        <label class="block mt-2 text-xs font-semibold text-gray-600 uppercase">Payment
+                            Method
+                            Group</label>
+                        <select
+                            class="block w-full mt-1 bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4 md:w-full "
+                            required="required" name="vpaymentmode" id="integration_city_id">
+                            <option>Cash</option>
+                            <option>UPI</option>
+                        </select>
+                        <button type="submit"
+                            class="w-full py-3 mt-6 font-medium tracking-widest text-white uppercase bg-black shadow-lg focus:outline-none hover:bg-gray-900 hover:shadow-none">
+                            Add Donation
+                        </button>
+                        <button onclick="payAlert(false)"
+                            class="w-full py-3 mt-6 font-medium tracking-widest text-black uppercase bg-amber-200 shadow-lg focus:outline-none hover:bg-amber-100 hover:shadow-none">
+                            Cancel
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div id="payalertdata" class="hidden"></div>
+        <button onclick="payAlert(false)"
+            class="text-gray-800 absolute top-8 right-8 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800"
+            aria-label="close">
+            <img class="dark:hidden" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/cookies-1-svg2.svg"
+                alt="close"></img>
+            <img class="dark:block hidden" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/cookies-1-svg2dark.svg"
+                alt="close"></img>
+        </button>
+    </div>
+</div>
+
+<script>
+    let payalert = document.getElementById("payalert");
+
+    const payAlert = (flag) => {
+        payalert.classList.toggle("hidden");
+    };
+    const addPayAlert = ({ flag, id }) => {
+        payAlert(flag)
+        const addData = document.getElementById('payalertdata');
+        addData.innerHTML += `${id}`
+        console.log(`${id}`);
+    }
+    const sendPayAlert = async () => {
+        // post request to /approve-wheelchair/:reqID
+        const id = document.getElementById('payalertdata').innerHTML;
+        showTopLoader();
+        let responseData = await fetch(`/admin/approve-wheelchair/${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        responseData = await responseData.json();
+        console.log(responseData);
+        hideTopLoader();
+        if (responseData.status === true) {
+            payAlert(false);
+            window.location.reload();
+        }
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="p-4">
+    <button
+        class="focus:outline-none w-full z-100 focus:ring-2 focus:ring-offset-2 -tr focus:ring-gray-500 focus:bg-gray-100 p-4 shadow rounded bg-white text-sm font-medium leading-none text-gray-800 flex items-center justify-between cursor-pointer"
+        onclick="dropdownHandler('add-member')">
+        Add Members
+        <div class="">
+            <div class="hidden" id="add-member-close">
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5.00016 0.666664L9.66683 5.33333L0.333496 5.33333L5.00016 0.666664Z" fill="#1F2937" />
+                </svg>
+            </div>
+            <div id="add-member-open">
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5.00016 5.33333L0.333496 0.666664H9.66683L5.00016 5.33333Z" fill="#1F2937" />
+                </svg>
+            </div>
+        </div>
+    </button>
+    <div class="w-full -z-10 mt-2 p-4 bg-gray-100 shadow overflow-x-scroll md:overflow-x-hidden transform transition-all duration-200 rounded"
+        id="add-member">
+
+
+        <div class="flex px-2 md:px-20 flex-col mt-8">
+            <div class="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+                <form action="/admin/addmember" method="post">
+                    <div class="w-full space-y-8 p-10 bg-white rounded-xl shadow-lg z-10">
+                        <div class="grid gap-8 grid-cols-1">
+                            <div class="flex flex-col ">
+                                <div class="mt-5">
+                                    <div class="form">
+                                        <div class="md:space-y-2 mb-3">
+                                            <label class="text-2xl font-semibold text-gray-600 py-2">Add New
+                                                Members<abbr class="hidden" title="required">*</abbr></label>
+                                        </div>
+                                        <div class="md:flex flex-row md:space-x-4 w-full text-xs">
+                                            <div class="mb-3 space-y-2 w-full text-xs">
+                                                <label class="font-semibold text-gray-600 py-2">Member Name <abbr
+                                                        title="required">*</abbr></label>
+                                                <input placeholder="Member Name"
+                                                    class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4"
+                                                    required="required" name="name" type="text">
+                                                <p class="text-red text-xs hidden">Please fill out this field.</p>
+                                            </div>
+                                            <div class="mb-3 space-y-2 w-full text-xs">
+                                                <label class="font-semibold text-gray-600 py-2">Member Mail <abbr
+                                                        title="required">*</abbr></label>
+                                                <input placeholder="Email ID"
+                                                    class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4"
+                                                    required="required" name="email" type="email">
+                                                <p class="text-red text-xs hidden">Please fill out this field.</p>
+                                            </div>
+                                        </div>
+                                        <div class="md:flex md:flex-row md:space-x-4 w-full text-xs">
+                                            <div class="w-full flex flex-col mb-3">
+                                                <label class="font-semibold text-gray-600 py-2">Contact</label>
+                                                <input placeholder="Address"
+                                                    class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4"
+                                                    name="contact" type="number">
+                                            </div>
+                                            <div class="w-full flex flex-col mb-3">
+                                                <label class="font-semibold text-gray-600 py-2">Blood Group<abbr
+                                                        title="required">*</abbr></label>
+                                                <select
+                                                    class="block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4 md:w-full "
+                                                    required="required" name="bloodGroup" id="integration_city_id">
+                                                    <option>A</option>
+                                                    <option>B</option>
+                                                    <option>AB+</option>
+                                                    <option>O+</option>
+                                                    <option>A-</option>
+                                                    <option>B-</option>
+                                                    <option>AB-</option>
+                                                    <option>O-</option>
+                                                </select>
+                                                <p class="text-sm text-red-500 hidden mt-3" id="error">Please fill out
+                                                    this
+                                                    field.</p>
+                                            </div>
+                                        </div>
+                                        <div class="md:flex md:flex-row md:space-x-4 w-full text-xs">
+                                            <div class="w-full flex flex-col mb-3">
+                                                <label class="font-semibold text-gray-600 py-2">Address</label>
+                                                <input placeholder="Address"
+                                                    class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4 py-10"
+                                                    name="address" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="md:flex flex-row md:space-x-4 w-full text-xs">
+                                            <div class="mb-3 space-y-2 w-full text-xs">
+                                                <label class="font-semibold text-gray-600 py-2">City<abbr
+                                                        title="required">*</abbr></label>
+                                                <input placeholder="City"
+                                                    class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4"
+                                                    required="required" name="city" type="text">
+                                                <p class="text-red text-xs hidden">Please fill out this field.</p>
+                                            </div>
+                                            <div class="mb-3 space-y-2 w-full text-xs">
+                                                <label class="font-semibold text-gray-600 py-2">State<abbr
+                                                        title="required">*</abbr></label>
+                                                <input placeholder="State"
+                                                    class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4"
+                                                    required="required" type="text" name="state">
+                                                <p class="text-red text-xs hidden">Please fill out this field.</p>
+                                            </div>
+                                        </div>
+                                        <p class="text-xs text-red-500 text-right my-3">Required fields are marked with
+                                            an
+                                            asterisk <abbr title="Required field">*</abbr></p>
+                                        <div class="mt-5 text-right md:space-x-3 md:block flex flex-col-reverse">
+                                            <button type="submit"
+                                                class="mb-2 md:mb-0 bg-green-400 px-5 py-2 text-sm shadow-sm font-medium tracking-wider text-white rounded-full hover:shadow-lg hover:bg-green-500">Add
+                                                Member</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
 
     </div>
 </div>
 
 <script>
+    let wholeData = '<%- JSON.stringify(memberdata) %>';
+    wholeData = JSON.parse(wholeData)
+    console.log(wholeData);
+
+    const dateConvertor = (date) => {
+        let d = new Date(date).toLocaleString("en-CA", { timeZone: "Asia/Kolkata" });
+        return d.substring(0, 10);
+    };
+
+    const addedMembersDownloader = (memberID) => {
+
+        console.log('member id is ', memberID.length)
+        showTopLoader();
+        let membersData;
+        for (let i of wholeData) {
+
+            if (i.memberID == memberID) {
+                membersData = i.addedMemberData;
+                break;
+            }
+        }
+        let formattedData = [];
+        let sno = 1;
+        for (let i of membersData) {
+            formattedData.push({
+                "sno": sno++,
+                "Member Id": i.memberID,
+                "name": i.name,
+                "contact": i.contact,
+                "Address": i.address,
+                "Date Added": dateConvertor(i.createdAt)
+            });
+        }
+
+        JSONToCSVConvertorProfileSection(formattedData, "Added Members Data", true);
+        hideTopLoader();
+    }
+
+    const ownDonationDownloader = (memberID) => {
+        showTopLoader();
+        let donationData;
+        for (let i of wholeData) {
+            if (i.memberID === memberID) {
+                donationData = i.ownDonationData;
+                break;
+            }
+        }
+        let formattedData = [];
+        let sno = 1;
+        for (let i of donationData) {
+            formattedData.push({
+                "sno": sno++,
+                "Member Id": i.memberID,
+                "Donation ID": i.donationID,
+                "Payment Mode": i.paymentMode,
+                "Payment ID": i.payment_id,
+                "Amount": i.amount,
+                "date": i.date
+            });
+        }
+
+        JSONToCSVConvertorProfileSection(formattedData, "own donation Data", true);
+        hideTopLoader();
+    }
+
+    const otherDonationDownloader = (memberID) => {
+        showTopLoader();
+        let donationData;
+        for (let i of wholeData) {
+            if (i.memberID === memberID) {
+                donationData = i.otherDonationData;
+                break;
+            }
+        }
+        let formattedData = [];
+        let sno = 1;
+        for (let i of donationData) {
+            formattedData.push({
+                "sno": sno++,
+                "Donation ID": i.donationID,
+                "Payment Mode": i.paymentMode,
+                "Amount": i.amount,
+                "Date Added": dateConvertor(i.createdAt)
+            });
+        }
+
+        JSONToCSVConvertorProfileSection(formattedData, "other donation data", true);
+        hideTopLoader();
+    }
+
+
+    const fullPageDownloader = () => {
+        showTopLoader();
+        let formattedData = [];
+        let sno = 1;
+        for (let i of wholeData) {
+            formattedData.push({
+                "sno": sno++,
+                "Member ID": i.memberID,
+                "Name": i.name,
+                "Email": i.email,
+                "Contact": i.contact,
+                "Address": i.address,
+                "Blood Group": i.bloodGroup,
+                "Added By": i.refferdBy,
+                "Added Members": i.addedMembers,
+                "Own Donation": i.ownDonations,
+                "Other Donation": i.otherDonations,
+                "Date Added": i.dateAdded
+            });
+        }
+
+        JSONToCSVConvertorProfileSection(formattedData, "Whole data", true);
+        hideTopLoader();
+    }
+
+
+    // helper functions to generate and download excel file
+    function JSONToCSVConvertorProfileSection(JSONData, ReportTitle, ShowLabel) {
+        //If JSONData is not an object then JSON.parse will parse the JSON string in an Object
+        var arrData = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;
+
+        var CSV = '\r\n\n';
+
+        //This condition will generate the Label/Header
+        if (ShowLabel) {
+            var row = "";
+
+            //This loop will extract the label from 1st index of on array
+            for (var index in arrData[0]) {
+
+                //Now convert each value to string and comma-seprated
+                row += index + ',';
+            }
+
+            row = row.slice(0, -1);
+
+            //append Label row with line break
+            CSV += row + '\r\n';
+        }
+
+        //1st loop is to extract each row
+        for (var i = 0; i < arrData.length; i++) {
+            var row = "";
+
+            //2nd loop will extract each column and convert it in string comma-seprated
+            for (var index in arrData[i]) {
+                row += '"' + arrData[i][index] + '",';
+            }
+
+            row.slice(0, row.length - 1);
+
+            //add a line break after each row
+            CSV += row + '\r\n';
+        }
+
+        if (CSV == '') {
+            alert("Invalid data");
+            return;
+        }
+
+        //Generate a file name
+        var fileName = "";
+        //this will remove the blank-spaces from the title and replace it with an underscore
+        fileName += ReportTitle.replace(/ /g, "_");
+
+        //Initialize file format you want csv or xls
+        var uri = 'data:text/csv;charset=utf-8,' + escape(CSV);
+
+        // Now the little tricky part.
+        // you can use either>> window.open(uri);
+        // but this will not work in some browsers
+        // or you will not get the correct file extension    
+
+        //this trick will generate a temp <a /> tag
+        var link = document.createElement("a");
+        link.href = uri;
+
+        //set the visibility hidden so it will not effect on your web-layout
+        link.style = "visibility:hidden";
+        link.download = fileName + ".csv";
+
+        //this part will append the anchor tag and remove it after automatic click
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
 
 </script>

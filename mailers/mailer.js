@@ -302,6 +302,7 @@ const memberDonationPDF = async (donationData, memberData, sendMail) => {
 //-------------------------member registeration mailer ---------------------------//
 const memberRegisterationMailer = async (member) => {
     try {
+        console.log(member);
         let htmlData = renderTemplate(member, "memberRegisteration.ejs");
         swiggy
             .sendMail({
