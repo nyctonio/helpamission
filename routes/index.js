@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const bucket = require('../utils/cosmic');
-const { verifyAdminToken, verifyAdminLogin } = require('../utils/adminauthprovider');
-const jwt = require('jsonwebtoken');
+// const { verifyAdminToken, verifyAdminLogin } = require('../utils/adminauthprovider');
+// const jwt = require('jsonwebtoken');
 
 
 router.use('/visitor', require('./visitor/index'));

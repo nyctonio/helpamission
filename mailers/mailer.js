@@ -25,6 +25,7 @@ const dateConvertor = (date) => {
 
 //mailer
 const visitorOnlineDonationMailer = async (donationData, visitorData) => {
+    console.log('inside visitor')
     try {
         let wholeData = {
             donationData: donationData,
@@ -91,7 +92,9 @@ const visitorOnlineDonationPDF = async (
                 misc: misc,
             });
 
-            const browser = await puppeteer.launch();
+            const browser = await puppeteer.launch({
+                args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            });
 
             const page = await browser.newPage();
             await page.setContent(cont);
@@ -182,7 +185,9 @@ const offlineDonationPDF = async (donationData, visitorData, sendMail) => {
 
             // console.log("content is ", cont);
 
-            const browser = await puppeteer.launch();
+            const browser = await puppeteer.launch({
+                args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            });
 
             const page = await browser.newPage();
             await page.setContent(cont);
@@ -275,7 +280,9 @@ const memberDonationPDF = async (donationData, memberData, sendMail) => {
 
             // console.log("content is ", cont);
 
-            const browser = await puppeteer.launch();
+            const browser = await puppeteer.launch({
+                args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            });
 
             const page = await browser.newPage();
             await page.setContent(cont);

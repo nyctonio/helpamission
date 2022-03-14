@@ -23,7 +23,7 @@
 
         <nav class="mt-10">
             <a class="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-opacity-25 hover:bg-gray-700 hover:text-gray-100"
-                href="/admin/">
+                onclick="showTopLoader()" href="/admin/">
                 <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -47,7 +47,7 @@
             </a>
 
             <a class="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-opacity-25 hover:bg-gray-700 hover:text-gray-100"
-                href="/admin/transactions">
+                onclick="showTopLoader()" href="/admin/transactions">
                 <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -58,7 +58,7 @@
                 <span class="mx-3">Transactions</span>
             </a>
             <a class="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-opacity-25 hover:bg-gray-700 hover:text-gray-100"
-                href="/admin/chairs">
+                onclick="showTopLoader()" href="/admin/chairs">
                 <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -115,11 +115,11 @@
                 autoRun: true,
                 barThickness: 3,
                 barColors: {
-                    0: "rgba(26,  188, 156, .9)",
-                    ".25": "rgba(52,  152, 219, .9)",
-                    ".50": "rgba(241, 196, 15,  .9)",
-                    ".75": "rgba(230, 126, 34,  .9)",
-                    "1.0": "rgba(211, 84,  0,   .9)",
+                    0: "rgba(9,9,121,1)",
+                    ".25": "rgba(130,160,231,1)",
+                    ".50": "rgba(255,255,255,1)",
+                    ".75": "rgba(0,212,255,1)",
+                    "1.0": "rgba(0,212,255,1)",
                 },
                 shadowBlur: 10,
                 shadowColor: "rgba(0,   0,   0,   .6)",

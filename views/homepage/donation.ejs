@@ -228,6 +228,9 @@
                         displayNotification("failure");
                         // alert('Payment Failed');
                     }
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000)
                 }).catch(err => {
                     displayNotification("failure");
                     console.log('not sucsess');

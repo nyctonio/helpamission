@@ -68,6 +68,7 @@
                     <th class="px-4 py-2 " style="background-color:#f8f8f8">Members Added</th>
                     <th class="px-4 py-2 " style="background-color:#f8f8f8">Total Own Donation</th>
                     <th class="px-4 py-2 " style="background-color:#f8f8f8">Total Other Donations</th>
+                    <th class="px-4 py-2 " style="background-color:#f8f8f8">Delete Member</th>
                 </tr>
             </thead>
             <tbody class="text-sm font-normal text-gray-700">
@@ -100,6 +101,12 @@
                             onclick='otherDonationDownloader("<%=data.memberID%>")'>
                             <%-data.otherDonations%>
                         </td>
+                        <td>
+                            <button onclick="addDeleteAlert({flag:false,id:'<%-data.memberID%>'})"
+                                class="bg-red-500 hover:bg-red-400 text-white font-bold py-1 px-4 border-b-4 border-red-700 hover:border-red-500 rounded">
+                                Delete
+                            </button>
+                        </td>
                     </tr>
                     <% }) %>
             </tbody>
@@ -110,6 +117,72 @@
     </div>
 </div>
 
+<div class="relative flex justify-center items-center">
+    <div id="deletealert" class="z-10 w-full h-full hidden bg-gray-900 bg-opacity-80 top-0 fixed sticky-0">
+        <div class="2xl:container  2xl:mx-auto py-48 px-4 md:px-28 flex justify-center items-center">
+            <div
+                class="w-96 md:w-auto dark:bg-gray-800 relative flex flex-col justify-center items-center bg-white py-16 px-4 md:px-24 xl:py-24 xl:px-36">
+                <div role="banner">
+                    <img src="https://s2.svgbox.net/illlustrations.svg?ic=walkie-talkie&color=000000" width="32"
+                        height="32">
+                </div>
+                <div class="mt-12">
+                    <div id="deletealertdata" class="hidden"></div>
+                    <h1 role="main"
+                        class="text-3xl dark:text-white lg:text-4xl font-semibold leading-7 lg:leading-9 text-center text-gray-800">
+                        Are You Sure</h1>
+                </div>
+                <button onclick="sendDeleteAlert()"
+                    class="w-full dark:text-gray-800 dark:hover:bg-gray-100 dark:bg-white sm:w-auto mt-14 text-base leading-4 text-center text-white py-6 px-16 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 bg-gray-800 hover:bg-black">Mmm...
+                    Yes!</button>
+                <button onclick="DeleteAlert(false)"
+                    class="mt-6 dark:text-white dark:hover:border-white text-base leading-none focus:outline-none hover:border-gray-800 focus:border-gray-800 border-b border-transparent text-center text-gray-800">Nope..
+                    Nopes</button>
+                <button onclick="DeleteAlert(false)"
+                    class="text-gray-800 dark:text-gray-400 absolute top-8 right-8 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800"
+                    aria-label="close">
+                    <img class="dark:hidden" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/cookies-1-svg2.svg"
+                        alt="close"></img>
+                    <img class="dark:block hidden"
+                        src="https://tuk-cdn.s3.amazonaws.com/can-uploader/cookies-1-svg2dark.svg" alt="close"></img>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let deletealert = document.getElementById("deletealert");
+
+    const DeleteAlert = (flag) => {
+        deletealert.classList.toggle("hidden");
+    };
+    const addDeleteAlert = ({ flag, id }) => {
+        DeleteAlert(flag)
+        const addData = document.getElementById('deletealertdata');
+        addData.innerHTML = `${id}`
+        console.log(`${id}`);
+    }
+    const sendDeleteAlert = async () => {
+        const id = document.getElementById('deletealertdata').innerHTML;
+        showTopLoader();
+        let responseData = await fetch(`/admin/delete-member/${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        responseData = await responseData.json();
+        console.log(responseData);
+        hideTopLoader();
+        if (responseData.msg === "changed") {
+            DeleteAlert(false);
+            window.location.reload();
+        } else {
+            alert('Something went wrong');
+        }
+    }
+</script>
 
 
 
@@ -141,6 +214,7 @@
             <thead>
                 <tr class="rounded-lg text-sm font-medium text-gray-700 text-left" style="font-size: 0.9674rem">
                     <th class="px-4 py-2 bg-gray-200 " style="background-color:#f8f8f8">Member ID</th>
+                    <th class="px-4 py-2 bg-gray-200 " style="background-color:#f8f8f8">Name</th>
                     <th class="px-4 py-2 " style="background-color:#f8f8f8">Contact</th>
                     <th class="px-4 py-2 " style="background-color:#f8f8f8">Email</th>
                     <th class="px-4 py-2 " style="background-color:#f8f8f8">Due Date</th>
@@ -154,6 +228,9 @@
                             <%-data.memberID%>
                         </td>
                         <td class="px-4 py-4">
+                            <%-data.name%>
+                        </td>
+                        <td class="px-4 py-4">
                             <%-data.contact%>
                         </td>
                         <td class="px-4 py-4">
@@ -162,16 +239,20 @@
                         <td class="px-4 py-4">
                             <%-data.nextDueDate%>
                         </td>
-                        <td>
-                            <button onclick="addPayAlert({flag:false,id:'<%-data._id%>'})"
+                        <td class="flex justify-center items-center">
+                            <button onclick="addPayAlert({flag:false,id:'<%-data.memberID%>'})"
                                 class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-1 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
-                                Issue
+                                Pay
                             </button>
                         </td>
+
                     </tr>
                     <% }) %>
             </tbody>
         </table>
+        <button onclick="defaultersDownloaders()"
+            class="focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 focus:outline-none focus:bg-indigo-200 text-xs bg-indigo-100 hover:bg-indigo-200 rounded-md mt-6 font-medium py-2 w-full leading-3 text-indigo-700">Download
+            Excel</button>
     </div>
 </div>
 
@@ -185,33 +266,23 @@
         <div class="w-full h-full flex justify-center items-center">
             <div class="grid place-items-center">
                 <div class="w-11/12 p-12 bg-white">
-                    <h1 class="text-xl font-semibold">Hello there 👋, <span class="font-normal">fill in your
-                            information of the
-                            donor</span></h1>
-                    <form class="mt-6" action="/admin/fixed-donation" method="post">
-                        <label class="block mt-2 text-xs font-semibold text-gray-600 uppercase">Donation
+                    <h1 class="text-xl font-semibold">Hello there 👋, <span class="font-normal">You issuing fixed
+                            donation to <span id="memberID"></span>.</h1>
+                    <form class="mt-6" action="/admin/member-fixed-donation" method="post">
+                        <!-- <label class="block mt-2 text-xs font-semibold text-gray-600 uppercase">Donation
                             Amount</label>
                         <input type="number" name="vdonationamount" placeholder="amount"
                             class="block w-full p-3 mt-2 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner"
-                            required />
-
-                        <label class="block mt-2 text-xs font-semibold text-gray-600 uppercase">Payment
-                            Method
-                            Group</label>
-                        <select
-                            class="block w-full mt-1 bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4 md:w-full "
-                            required="required" name="vpaymentmode" id="integration_city_id">
-                            <option>Cash</option>
-                            <option>UPI</option>
-                        </select>
-                        <button type="submit"
+                            required /> -->
+                        <button type="submit" onclick="showTopLoader()"
                             class="w-full py-3 mt-6 font-medium tracking-widest text-white uppercase bg-black shadow-lg focus:outline-none hover:bg-gray-900 hover:shadow-none">
                             Add Donation
                         </button>
-                        <button onclick="payAlert(false)"
+                        <button type="button" onclick="payAlert(false)"
                             class="w-full py-3 mt-6 font-medium tracking-widest text-black uppercase bg-amber-200 shadow-lg focus:outline-none hover:bg-amber-100 hover:shadow-none">
                             Cancel
                         </button>
+                        <input type="hidden" id="hiddenID" name="memberID">
                     </form>
                 </div>
             </div>
@@ -237,45 +308,12 @@
     const addPayAlert = ({ flag, id }) => {
         payAlert(flag)
         const addData = document.getElementById('payalertdata');
-        addData.innerHTML += `${id}`
-        console.log(`${id}`);
-    }
-    const sendPayAlert = async () => {
-        // post request to /approve-wheelchair/:reqID
-        const id = document.getElementById('payalertdata').innerHTML;
-        showTopLoader();
-        let responseData = await fetch(`/admin/approve-wheelchair/${id}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
-        responseData = await responseData.json();
-        console.log(responseData);
-        hideTopLoader();
-        if (responseData.status === true) {
-            payAlert(false);
-            window.location.reload();
-        }
+        addData.innerHTML = `${id}`
+        document.getElementById('memberID').innerHTML = `${id}`;
+        document.getElementById('hiddenID').value = `${id}`;
+        console.log('id is ', `${id}`);
     }
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 <div class="p-4">
@@ -405,9 +443,11 @@
 
 <script>
     let wholeData = '<%- JSON.stringify(memberdata) %>';
+    let defaulterData = '<%- JSON.stringify(paymentdata) %>';
     wholeData = JSON.parse(wholeData)
+    defaulterData = JSON.parse(defaulterData);
     console.log(wholeData);
-
+    console.log('defaulter data is ', defaulterData);
     const dateConvertor = (date) => {
         let d = new Date(date).toLocaleString("en-CA", { timeZone: "Asia/Kolkata" });
         return d.substring(0, 10);
@@ -517,6 +557,26 @@
         }
 
         JSONToCSVConvertorProfileSection(formattedData, "Whole data", true);
+        hideTopLoader();
+    }
+
+
+    const defaultersDownloaders = () => {
+        showTopLoader();
+        let formattedData = [];
+        let sno = 1;
+        for (let i of defaulterData.defaulters) {
+            formattedData.push({
+                "sno": sno++,
+                "Member ID": i.memberID,
+                "Name": i.name,
+                "Email": i.email,
+                "Contact": i.contact,
+                "Due Date": i.nextDueDate
+            });
+        }
+
+        JSONToCSVConvertorProfileSection(formattedData, "Not Paid data", true);
         hideTopLoader();
     }
 

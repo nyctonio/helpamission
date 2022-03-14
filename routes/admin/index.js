@@ -11,15 +11,19 @@ const {
   fixedDonationFetcher,
   wheelChairDataFetcher,
   homePageDataFetcher,
-  hashPassword
+  hashPassword,
 } = require("./adminutils");
-const { member } = require("../../models");
+const { member, donation } = require("../../models");
 const {
   scheduleforEveryDay,
   scheduleforEveryYear,
 } = require("../../utils/sheduler");
 const wheel = require("../../models/wheel");
-const { requestApprovedMailer, memberRegisterationMailer } = require("../../mailers/mailer");
+const {
+  requestApprovedMailer,
+  memberRegisterationMailer,
+  memberDonationPDF,
+} = require("../../mailers/mailer");
 
 router.get("/", async (req, res) => {
   const { token } = req.cookies;
@@ -92,7 +96,7 @@ router.post("/addmember", async (req, res) => {
         scheduleforEveryYear(newMember.email);
       }
     });
-    res.json({ status: "ok" });
+    res.redirect('/admin/member');
   } catch (error) {
     console.log(error);
     return res.json({ error });
@@ -109,20 +113,28 @@ router.post("/update-member/:memberID", async (req, res) => {
   }
 });
 
-router.get("/delete-member/:memberID", async (req, res) => {
+router.post("/delete-member/:memberID", async (req, res) => {
   try {
-    let currMember = await member.findOne({ memberID: req.params.memberID });
-
+    console.log(req.params.memberID);
+    let currMember = await member.findOneAndDelete({ memberID: req.params.memberID });
+    console.log(currMember);
     let referringMember = await member.findOne({
-      memberID: currMember.refferedBy,
+      memberID: currMember.refferdBy,
     });
-    const eligible = (id) => {
-      return id !== req.params.memberID;
-    };
-    referringMember.addedMembers.filter(eligible);
-    await referringMember.save();
+    console.log(referringMember);
+    if (referringMember) {
+      const eligible = (id) => {
+        return id !== req.params.memberID;
+      };
+      referringMember.addedMembers = referringMember.addedMembers.filter(eligible);
+      console.log('after filter', referringMember);
+      await referringMember.save();
+    }
     return res.send({ msg: "changed" });
-  } catch (err) { }
+  } catch (err) {
+    console.log(err);
+    res.send({ msg: "error" });
+  }
 });
 
 router.get("/transactions", async (req, res) => {
@@ -148,7 +160,7 @@ router.get("/manage-fixed-payments", async (req, res) => {
 router.get("/chairs", async (req, res) => {
   try {
     let data = await wheelChairDataFetcher();
-    res.render('admin/wheels', { wheeldata: data })
+    res.render("admin/wheels", { wheeldata: data });
     // res.send(data)
   } catch (err) {
     console.log("error in fetching wheel chair data");
@@ -186,11 +198,68 @@ router.post("/return-wheelchair/:reqID", async (req, res) => {
 
 router.post("/reject-wheelchair/:reqID", async (req, res) => {
   try {
-    await wheel.findByIdAndDelete(req.params.reqID);
-    return res.send({ msg: "rejected successfully" });
+    await wheel.findByIdAndRemove(req.params.reqID);
+    return res.send({ status: true });
   } catch (err) {
     console.log("eror in rejecting the req", err);
-    return res.send({ msg: "err" });
+    return res.send({ status: false });
+  }
+});
+
+router.post("/member-fixed-donation", async (req, res) => {
+  try {
+    let fixedAmount = 1100;
+    let currMember = await member.findOne({ memberID: req.body.memberID });
+    console.log("curr member is ", currMember);
+    let newDonation = await donation.create({
+      amount: fixedAmount,
+      order_id: "N/A",
+      payment_id: "N/A",
+      donationID: Date.now(),
+      donorID: currMember.memberID,
+      donationType: "memberFixedDonation",
+    });
+
+    currMember.ownDonations.push(newDonation.donationID);
+    const t = new Date(new Date().setFullYear(new Date().getFullYear() + 1));
+    currMember.nextDueDate = t.getTime();
+    await currMember.save();
+    console.log(currMember);
+    // sending mail
+    memberDonationPDF(newDonation, currMember, true);
+    // calling scheduler
+    scheduleforEveryDay(currMember.email);
+
+    return res.redirect("back");
+  } catch (err) {
+    console.log("error in member-fixed-donation in admin panel", err);
+    return res.send({ status: false });
+  }
+});
+
+router.post("/member-normal-donation", async (req, res) => {
+  try {
+    let fixedAmount = req.body.vdonationamount;
+    let currMember = await member.findOne({ memberID: req.body.memberID });
+    console.log("curr member is ", currMember);
+    let newDonation = await donation.create({
+      amount: fixedAmount,
+      order_id: "N/A",
+      payment_id: "Issued By Admin",
+      donationID: Date.now(),
+      donorID: currMember.memberID,
+      donationType: "memberNormalDonation",
+    });
+
+    currMember.ownDonations.push(newDonation.donationID);
+    await currMember.save();
+    console.log(currMember);
+    // sending mail
+    memberDonationPDF(newDonation, currMember, true);
+    return res.redirect("back");
+  } catch (err) {
+    console.log("error in member-normal-donation in admin panel", err);
+    return res.send({ status: false });
   }
 });
 

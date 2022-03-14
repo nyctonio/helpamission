@@ -15,12 +15,12 @@ const hashPassword = async (normalPassword) => {
   return secPass;
 };
 
-
 const homePageDataFetcher = async () => {
   let finalData = {
-    memberCount: '',
-    offlineDonation: '',
-    onlineDonation: '',
+    memberCount: "",
+    offlineDonation: "",
+    onlineDonation: "",
+    wheelChairRequest: "",
   };
 
   let members = await member.find({});
@@ -49,9 +49,12 @@ const homePageDataFetcher = async () => {
     }
   }
 
+  let wheelChairReq = await wheel.find({ isIssued: false, isReturned: false });
+  finalData.wheelChairRequest = wheelChairReq.length;
+
   finalData.offlineDonation = offlineDonation;
   finalData.onlineDonation = onlineDonation;
-  console.log('this is', finalData);
+  // console.log("this is", finalData);
   return finalData;
 };
 
@@ -90,7 +93,7 @@ const memberDataFetcher = async () => {
     tempObj.otherDonationData = await otherDonationFetcher(i.memberID);
     finalData.push(tempObj);
   }
-  console.log("final data is ", finalData);
+  // console.log("final data is ", finalData);
   return finalData;
 };
 
@@ -228,6 +231,7 @@ const fixedDonationFetcher = async () => {
   let membersData = await member.find({});
   for (let i of membersData) {
     let tempObj = {
+      name: i.name,
       memberID: i.memberID,
       email: i.email,
       contact: i.contact,
@@ -259,11 +263,38 @@ const wheelChairDataFetcher = async () => {
     let returned = [];
     for (let i of currData) {
       if (i.isIssued && i.isReturned) {
-        returned.push(i);
+        let tempObj = {
+          _id: i._id,
+          name: i.name,
+          address: i.address,
+          contact: i.contact,
+          email: i.email,
+          status: "returned",
+          dateAdded: dateConvertor(i.createdAt),
+        };
+        returned.push(tempObj);
       } else if (!i.isIssued && !i.isReturned) {
-        request.push(i);
+        let tempObj = {
+          _id: i._id,
+          name: i.name,
+          address: i.address,
+          contact: i.contact,
+          email: i.email,
+          status: "requested",
+          dateAdded: dateConvertor(i.createdAt),
+        };
+        request.push(tempObj);
       } else if (i.isIssued && !i.isReturned) {
-        approved.push(i);
+        let tempObj = {
+          _id: i._id,
+          name: i.name,
+          address: i.address,
+          contact: i.contact,
+          email: i.email,
+          status: "approved",
+          dateAdded: dateConvertor(i.createdAt),
+        };
+        approved.push(tempObj);
       }
     }
     let mainData = {
@@ -271,6 +302,7 @@ const wheelChairDataFetcher = async () => {
       approved,
       returned,
     };
+    console.log(mainData);
     return mainData;
   } catch (err) {
     console.log("error in fetching data", err);
@@ -284,5 +316,5 @@ module.exports = {
   fixedDonationFetcher,
   wheelChairDataFetcher,
   homePageDataFetcher,
-  hashPassword
+  hashPassword,
 };
