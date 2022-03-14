@@ -83,6 +83,9 @@
             </div>
 
             <div class="flex items-center">
+                <input type="text" id="search-bar" onchange="searchHandler()"
+                    class="rounded-xl border-2 border-blue-500 focus:border-blue-500 p-2 mr-10" />
+
                 <div x-data="{ dropdownOpen: false }" class="relative">
                     <button @click="dropdownOpen = ! dropdownOpen"
                         class="relative block h-8 w-8 rounded-full overflow-hidden shadow focus:outline-none">
@@ -93,6 +96,8 @@
 
                     <div x-show="dropdownOpen" @click="dropdownOpen = false" class="fixed inset-0 h-full w-full z-10"
                         style="display: none;"></div>
+
+
 
                     <div x-show="dropdownOpen"
                         class="absolute right-0 mt-2 w-48 bg-white rounded-md overflow-hidden shadow-xl z-10"
@@ -105,6 +110,22 @@
                 </div>
             </div>
         </header>
+
+        <script>
+            function searchHandler() {
+                const searchvalue = document.getElementById(`search-bar`).value;
+                console.log('s', searchvalue);
+                const searchclass = document.getElementsByClassName(`search-class`);
+                console.log('s', searchclass);
+                for (let i = 0; i < searchclass.length; i++) {
+                    if (searchclass[i].innerText.toLowerCase().indexOf(searchvalue.toLowerCase()) > -1) {
+                        searchclass[i].style.display = "";
+                    } else {
+                        searchclass[i].style.display = "none";
+                    }
+                }
+            }
+        </script>
 
 
         <script src="/scripts/topbar.js"></script>
