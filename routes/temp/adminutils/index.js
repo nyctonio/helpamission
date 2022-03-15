@@ -11,7 +11,9 @@ const dateConvertor = (date) => {
 const memberDataFetcher = async () => {
     let finalData = [];
 
-    let membersData = await member.find({});
+    let membersData = await member.find({}).sort({
+        createdAt: -1,
+    });
     for (let i of membersData) {
         let tempObj = {
             memberID: i.memberID,
@@ -102,7 +104,9 @@ const otherDonationFetcher = async (memberID) => {
 };
 
 const transactionDataFetcher = async () => {
-    let donationData = await donation.find({});
+    let donationData = await donation.find({}).sort({
+        createdAt: -1,
+    });
 
     let homePageDonations = [];
     let memberDonation = [];
@@ -178,7 +182,9 @@ const fixedDonationFetcher = async () => {
     let defaulters = [];
     let normal = [];
 
-    let membersData = await member.find({});
+    let membersData = await member.find({}).sort({
+        createdAt: -1,
+    });
     for (let i of membersData) {
         let tempObj = {
             memberID: i.memberID,
@@ -205,7 +211,9 @@ const fixedDonationFetcher = async () => {
 // wheel chair data fetcher
 const wheelChairDataFetcher = async () => {
     try {
-        let currData = await wheel.find({});
+        let currData = await wheel.find({}).sort({
+            createdAt: -1,
+        });
         let newReq = [];
         let activeReq = [];
         let completedReq = [];

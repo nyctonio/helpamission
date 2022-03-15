@@ -86,6 +86,7 @@ const dataForProfileSection = async (email) => {
     let ownDonations = await getOwnDonations(email);
     let otherDonations = await getOtherDonations(email);
     let userData = await getOwnDetails(email);
+    // console.log('added members', addedMembers);
     let data = {
       member: [],
       owndonation: [],
@@ -99,6 +100,7 @@ const dataForProfileSection = async (email) => {
         nextDueDate: userData.nextDueDate,
         createdAt: userData.createdAt,
         memberID: userData.memberID,
+        image: userData.image,
       },
     };
     const newdate = new Date(parseInt(userData.nextDueDate));

@@ -1,9 +1,12 @@
 const schedule = require('node-schedule');
 const member = require('../models/memberauth');
+const donationDeadlineMailer = require('../mailers/mailer');
 
 const getAllSchedulingData = async () => {
     console.log('getAllSchedulingData');
-    let membersData = await member.find({});
+    let membersData = await member.find({}).sort({
+        createdAt: -1,
+    });
     for (let i of membersData) {
         if (i.nextDueDate > Date.now()) {
             scheduleforEveryYear(i.email);
@@ -22,6 +25,7 @@ const scheduleforEveryDay = async (email) => {
                 console.log('Terminated ', memberData.memberID);
                 scheduleforEveryYear(memberData.email);
             } else {
+                await donationDeadlineMailer(memberData);
                 console.log('sending mail');
             }
         }

@@ -23,7 +23,9 @@ const homePageDataFetcher = async () => {
     wheelChairRequest: "",
   };
 
-  let members = await member.find({});
+  let members = await member.find({}).sort({
+    createdAt: -1,
+  });
   finalData.memberCount = members.length;
 
   let offlineDonation = {
@@ -35,7 +37,9 @@ const homePageDataFetcher = async () => {
     amount: 0,
   };
 
-  let donations = await donation.find({});
+  let donations = await donation.find({}).sort({
+    createdAt: -1,
+  });;
   for (let i of donations) {
     if (
       i.donationType === "OfflineCashDonation" ||
@@ -49,7 +53,9 @@ const homePageDataFetcher = async () => {
     }
   }
 
-  let wheelChairReq = await wheel.find({ isIssued: false, isReturned: false });
+  let wheelChairReq = await wheel.find({ isIssued: false, isReturned: false }).sort({
+    createdAt: -1,
+  });
   finalData.wheelChairRequest = wheelChairReq.length;
 
   finalData.offlineDonation = offlineDonation;
@@ -61,7 +67,9 @@ const homePageDataFetcher = async () => {
 const memberDataFetcher = async () => {
   let finalData = [];
 
-  let membersData = await member.find({});
+  let membersData = await member.find({}).sort({
+    createdAt: -1,
+  });
   for (let i of membersData) {
     let tempObj = {
       memberID: i.memberID,
@@ -74,6 +82,7 @@ const memberDataFetcher = async () => {
       refferdBy: i.refferdBy,
       addedMembers: i.addedMembers.length,
       dateAdded: dateConvertor(i.createdAt),
+      image: i.image,
     };
     let ownDonations = 0;
     let otherDonations = 0;
@@ -109,6 +118,7 @@ const addedMemberFetcher = async (memberID) => {
       address: tempMember.address,
       city: tempMember.city,
       createdAt: tempMember.createdAt,
+      image: tempMember.image,
     };
     data.push(tempObj);
   }
@@ -152,7 +162,9 @@ const otherDonationFetcher = async (memberID) => {
 };
 
 const transactionDataFetcher = async () => {
-  let donationData = await donation.find({});
+  let donationData = await donation.find({}).sort({
+    createdAt: -1,
+  });
 
   let homePageDonations = [];
   let memberDonation = [];
@@ -228,7 +240,9 @@ const fixedDonationFetcher = async () => {
   let defaulters = [];
   let normal = [];
 
-  let membersData = await member.find({});
+  let membersData = await member.find({}).sort({
+    createdAt: -1,
+  });
   for (let i of membersData) {
     let tempObj = {
       name: i.name,
@@ -237,6 +251,7 @@ const fixedDonationFetcher = async () => {
       contact: i.contact,
       address: i.address,
       nextDueDate: String(Date(parseInt(i.nextDueDate))).slice(0, 15),
+      image: i.image,
     };
 
     if (i.nextDueDate > Date.now()) {
@@ -257,7 +272,9 @@ const fixedDonationFetcher = async () => {
 // wheel chair data fetcher
 const wheelChairDataFetcher = async () => {
   try {
-    let currData = await wheel.find({});
+    let currData = await wheel.find({}).sort({
+      createdAt: -1,
+    });
     let request = [];
     let approved = [];
     let returned = [];
@@ -315,7 +332,9 @@ const visitorDataFetcher = async () => {
   try {
     let mainData = [];
 
-    let visitorData = await visitor.find({});
+    let visitorData = await visitor.find({}).sort({
+      createdAt: -1,
+    });
 
     for (let i of visitorData) {
       let tempObj = {};

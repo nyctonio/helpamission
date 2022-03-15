@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
-const multer = require("multer");
 const {
   hashPassword,
   getAddedMember,
@@ -43,16 +42,25 @@ const razorpay = new Razorpay({
 });
 const fs = require("fs");
 
-// multer setup
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(__dirname + "../../public/members"));
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname + Date.now());
-  },
-});
-var upload = multer({ storage: storage });
+// image upload multer
+const multer = require('multer');
+const fileUpload = multer();
+const uploadImage = require('../../config/cloudinary');
+router.post("/profilepicture", fileUpload.single('profilepicture'), (req, res) => {
+  uploadImage(req).then(async (result) => {
+    const { token } = req.cookies;
+    const verify = jwt.verify(token, JWT_SECRET);
+    const data = await member.findOneAndUpdate(
+      {
+        email: verify.username,
+      },
+      {
+        image: result.secure_url,
+      }
+    );
+    res.redirect('/member/profile-section');
+  });
+})
 
 router.get("/", async (req, res) => {
   const { token } = req.cookies;
@@ -176,6 +184,7 @@ router.get("/profile-section", async (req, res) => {
     const verify = jwt.verify(token, JWT_SECRET);
 
     const profiledata = await dataForProfileSection(verify.username);
+    // res.send(profiledata);
     return res.render("member/profilesection", { profiledata });
   } catch (err) {
     console.log(err);
@@ -184,22 +193,22 @@ router.get("/profile-section", async (req, res) => {
 });
 
 // update member details & change profile photo
-router.post(
-  "/update-profile-photo/:memberID",
-  upload.single("profile-file"),
-  async (req, res) => {
-    try {
-      await member.findOneAndUpdate(
-        { memberID: req.params.memberID },
-        { image: req.file.path }
-      );
-      return res.send({ status: true });
-    } catch (err) {
-      console.log("error in uploading profile photo", err);
-      return;
-    }
-  }
-);
+// router.post(
+//   "/update-profile-photo/:memberID",
+//   upload.single("profile-file"),
+//   async (req, res) => {
+//     try {
+//       await member.findOneAndUpdate(
+//         { memberID: req.params.memberID },
+//         { image: req.file.path }
+//       );
+//       return res.send({ status: true });
+//     } catch (err) {
+//       console.log("error in uploading profile photo", err);
+//       return;
+//     }
+//   }
+// );
 
 router.post("/update-member-details", async (req, res) => {
   try {
@@ -406,7 +415,7 @@ router.post("/normal-member-donation/verify", async (req, res) => {
         currMember.ownDonations.push(donateData.donationID);
         await currMember.save();
         // sending mail for pdf reciept
-        memberDonationPDF(donateData, currMember, true);
+        await memberDonationPDF(donateData, currMember, true);
       })
       .catch((err) => {
         console.log("error in adding new donation ", err);

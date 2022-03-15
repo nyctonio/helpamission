@@ -43,27 +43,27 @@
 
 
                 <div class="col-span-1">
-                    <form onsubmit="formHandler()" class="p-6  flex flex-col justify-center">
+                    <form id="wheelchairform" onsubmit="formHandler()" class="p-6  flex flex-col justify-center">
                         <div class="flex flex-col mt-2">
                             <label for="name" class="hidden">Full Name</label>
-                            <input id="vname" type="name" name="name" placeholder="Full Name"
-                                class="w-100 mt-2 py-3 px-3 rounded-lg bg-white border border-gray-400 font-semibold focus:border-indigo-500 focus:outline-none">
+                            <input id="visitorname" type="name" name="name" placeholder="Full Name"
+                                class="w-100 mt-2 py-3 px-3 rounded-lg bg-white border border-gray-400 font-semibold focus:border-indigo-500 focus:outline-none" />
                         </div>
                         <div class="flex flex-col mt-2">
                             <label for="email" class="hidden">Email</label>
-                            <input id="vemail" type="email" name="email" placeholder="Email"
-                                class="w-100 mt-2 py-3 px-3 rounded-lg bg-white  border-gray-400 font-semibold focus:border-indigo-500 focus:outline-none">
+                            <input id="visitoremail" type="email" name="email" placeholder="Email"
+                                class="w-100 mt-2 py-3 px-3 rounded-lg bg-white  border-gray-400 font-semibold focus:border-indigo-500 focus:outline-none" />
                         </div>
 
                         <div class="flex flex-col mt-2">
                             <label for="tel" class="hidden">Number</label>
-                            <input id="vcontact" type="tel" name="contact" placeholder="Contact"
-                                class="w-100 mt-2 py-3 px-3 rounded-lg bg-white border border-gray-400  font-semibold focus:border-indigo-500 focus:outline-none">
+                            <input id="visitorcontact" type="tel" name="contact" placeholder="Contact"
+                                class="w-100 mt-2 py-3 px-3 rounded-lg bg-white border border-gray-400  font-semibold focus:border-indigo-500 focus:outline-none" />
                         </div>
                         <div class="flex flex-col mt-2">
                             <label for="address" class="hidden">Address</label>
-                            <input id="vaddress" type="address" name="address" placeholder="Address"
-                                class="w-100 mt-2 py-3 px-3 rounded-lg bg-white border border-gray-400  font-semibold focus:border-indigo-500 focus:outline-none">
+                            <input id="visitoraddress" type="address" name="address" placeholder="Address"
+                                class="w-100 mt-2 py-3 px-3 rounded-lg bg-white border border-gray-400  font-semibold focus:border-indigo-500 focus:outline-none" />
                         </div>
 
                         <button type="submit"
@@ -101,19 +101,25 @@
         Notification.classList.remove("hidden");
     }
 
+    const visitorname = document.getElementById('visitorname');
+    const visitoremail = document.getElementById('visitoremail');
+    const visitorcontact = document.getElementById('visitorcontact');
+    const visitoraddress = document.getElementById('visitoraddress');
+
+
 
     const formHandler = async () => {
         showTopLoader();
         event.preventDefault();
-        const name = document.getElementById('vname').value;
-        const email = document.getElementById('vemail').value;
-        const contact = document.getElementById('vcontact').value;
-        const address = document.getElementById('vaddress').value;
 
         const vdata = {
-            name, email, contact, address
+            name: visitorname.value,
+            email: visitoremail.value,
+            contact: visitorcontact.value,
+            address: visitoraddress.value
         }
 
+        console.log(vdata);
         let responseData = await fetch('/visitor/getwheelchair', {
             method: 'POST',
             headers: {
@@ -128,11 +134,7 @@
             displayNotification('success');
         }
         hideTopLoader();
-
-        document.getElementById('vname').value = "";
-        document.getElementById('vemail').value = "";
-        document.getElementById('vcontact').value = "";
-        document.getElementById('vaddress').value = "";
+        document.getElementById('wheelchairform').reset()
         // location.reload();
         return;
     }

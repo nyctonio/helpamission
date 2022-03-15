@@ -345,6 +345,25 @@ const donationDeadlineMailer = async (member) => {
     }
 };
 
+
+const wheelChairMailer = async (wheeldata) => {
+    try {
+        let htmlData = renderTemplate(wheeldata, "wheelchair.ejs");
+        swiggy
+            .sendMail({
+                from: "helpamission1@gmail.com",
+                to: wheeldata.email,
+                subject: "Request Approved",
+                html: htmlData,
+            })
+            .then(() => {
+                console.log("mail sent successfully");
+            });
+    } catch (err) {
+        console.log("error in sending new registeration mail", err);
+    }
+};
+
 module.exports = {
     visitorOnlineDonationPDF,
     fileRemover,
@@ -352,4 +371,5 @@ module.exports = {
     memberDonationPDF,
     memberRegisterationMailer,
     donationDeadlineMailer,
+    wheelChairMailer
 };
