@@ -70,6 +70,7 @@
                     <div class="mt-2 grid ">
                         <select id="vbgroup"
                             class="border  border-gray-300 rounded-md w-full text-gray-600 h-14 pl-4 pr-10 bg-white hover:border-gray-400 focus:outline-none">
+                            <option selected>N/A</option>
                             <option>A+</option>
                             <option>B+</option>
                             <option>AB+</option>
@@ -83,7 +84,7 @@
                     <div class="mt-8">
                         <input
                             class="border border-gray-300 p-4 rounded w-full text-base leading-4 placeholder-gray-600 text-gray-600"
-                            type="number" required name="" id="vmno" placeholder="Phone Number" />
+                            type="number" maxlength="10" required name="" id="vmno" placeholder="Phone Number" />
                     </div>
                     <div class="mt-8">
                         <input
@@ -98,7 +99,7 @@
                     <div class="mt-8">
                         <input oninput="calculateDonationAmt()"
                             class="border border-gray-300 p-4 rounded w-full text-base leading-4 placeholder-gray-600 text-gray-600"
-                            type="text" required name="" id="input-donation-amt" placeholder="Amount" />
+                            type="number" required name="" id="input-donation-amt" placeholder="Amount" />
                     </div>
                     <button type="submit"
                         class="mt-8 border border-transparent bg-amber-100 hover:bg-red-500 flex justify-center items-center py-4 rounded w-full">
@@ -150,6 +151,9 @@
     function calculateDonationAmt() {
         console.log('yep')
         var donationAmt = document.getElementById("input-donation-amt").value;
+        if (donationAmt == '') {
+            donationAmt = 0;
+        }
         document.getElementById("donation-amt").innerHTML = donationAmt;
     }
 </script>
@@ -228,9 +232,7 @@
                         displayNotification("failure");
                         // alert('Payment Failed');
                     }
-                    setTimeout(() => {
-                        location.reload();
-                    }, 2000)
+                    cleanerFunction();
                 }).catch(err => {
                     displayNotification("failure");
                     console.log('not sucsess');
@@ -250,5 +252,16 @@
         };
         const rzp1 = new Razorpay(options);
         rzp1.open();
+    }
+
+
+    const cleanerFunction = () => {
+        document.getElementById("vname").value = "";
+        document.getElementById("vbgroup").value = "N/A";
+        document.getElementById("vmno").value = "";
+        document.getElementById("vemail").value = "";
+        document.getElementById("input-donation-amt").value = "";
+        document.getElementById("vaddress").value = "";
+        calculateDonationAmt();
     }
 </script>

@@ -345,6 +345,9 @@
                         alert("failure");
                         // alert('Payment Failed');
                     }
+
+                    document.getElementById('willpayamount').value = "";
+
                 }).catch(err => {
                     alert("failure");
                     console.log('not sucsess');
@@ -360,4 +363,5 @@
         const rzp2 = new Razorpay(options);
         rzp2.open();
     }
+
 </script>

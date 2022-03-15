@@ -406,7 +406,7 @@ router.post("/normal-member-donation/verify", async (req, res) => {
         currMember.ownDonations.push(donateData.donationID);
         await currMember.save();
         // sending mail for pdf reciept
-        memberDonationPDF(donateData, currMember, true);
+        await memberDonationPDF(donateData, currMember, true);
       })
       .catch((err) => {
         console.log("error in adding new donation ", err);

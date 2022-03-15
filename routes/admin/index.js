@@ -24,6 +24,7 @@ const {
   requestApprovedMailer,
   memberRegisterationMailer,
   memberDonationPDF,
+  wheelChairMailer,
 } = require("../../mailers/mailer");
 
 router.get("/", async (req, res) => {
@@ -178,7 +179,7 @@ router.post("/approve-wheelchair/:reqID", async (req, res) => {
     wheelData.isIssued = true;
     wheelData.issueDate = Date.now();
     await wheelData.save();
-    // await requestApprovedMailer(wheelData);
+    await wheelChairMailer(wheelData);
     return res.send({ status: true });
   } catch (err) {
     console.log("error in approving the req", err);

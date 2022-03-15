@@ -1,12 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        p {
+            font-size: 2rem;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Donation Pending</h1>
+    <p>
+        नमस्ते <%=data.name%> जी,<br>
+            आशा है, आप कुशल हैं।<br>
+            हमें अभी तक अपने सालाना तय राशि के संबंध में <b>1100/-</b> का भुगतान प्राप्त नहीं हुआ है,<br>
+            जो दिनांक <%=data.nextDueDate%> को भुगतान के लिए देय था। मैं वास्तव में आभारी रहूंगा यदि आप मुझे बता सकें
+                कि हम कब भुगतान
+                प्राप्त करने की उम्मीद कर सकते हैं।<br>
+                सादर<br>
+                Help-A Mission Welfare Society
+    </p>
 </body>
+
 </html>

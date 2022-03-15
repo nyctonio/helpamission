@@ -46,23 +46,23 @@
                     <form onsubmit="formHandler()" class="p-6  flex flex-col justify-center">
                         <div class="flex flex-col mt-2">
                             <label for="name" class="hidden">Full Name</label>
-                            <input id="vname" type="name" name="name" placeholder="Full Name"
+                            <input id="rname" type="name" name="name" placeholder="Full Name"
                                 class="w-100 mt-2 py-3 px-3 rounded-lg bg-white border border-gray-400 font-semibold focus:border-indigo-500 focus:outline-none">
                         </div>
                         <div class="flex flex-col mt-2">
                             <label for="email" class="hidden">Email</label>
-                            <input id="vemail" type="email" name="email" placeholder="Email"
+                            <input id="remail" type="email" name="email" placeholder="Email"
                                 class="w-100 mt-2 py-3 px-3 rounded-lg bg-white  border-gray-400 font-semibold focus:border-indigo-500 focus:outline-none">
                         </div>
 
                         <div class="flex flex-col mt-2">
                             <label for="tel" class="hidden">Number</label>
-                            <input id="vcontact" type="tel" name="contact" placeholder="Contact"
+                            <input id="rcontact" type="tel" name="contact" placeholder="Contact"
                                 class="w-100 mt-2 py-3 px-3 rounded-lg bg-white border border-gray-400  font-semibold focus:border-indigo-500 focus:outline-none">
                         </div>
                         <div class="flex flex-col mt-2">
                             <label for="address" class="hidden">Address</label>
-                            <input id="vaddress" type="address" name="address" placeholder="Address"
+                            <input id="raddress" type="address" name="address" placeholder="Address"
                                 class="w-100 mt-2 py-3 px-3 rounded-lg bg-white border border-gray-400  font-semibold focus:border-indigo-500 focus:outline-none">
                         </div>
 
@@ -80,8 +80,8 @@
 
 
 <script>
-
     function displayNotification(msg) {
+        console.log('in notification function');
         if (msg == "success") {
             document.getElementById("notification-content").style.backgroundColor = "green";
         } else {
@@ -92,28 +92,25 @@
         Notification.classList.remove("hidden");
         Notification.classList.add("flex");
         Notification.style.transform = "translateX(0%)";
+        console.log('showed notification');
         setTimeout(closeModal, 3000);
     }
-
     function closeModal() {
         let Notification = document.getElementById("notification");
         Notification.style.transform = "translateX(150%)";
         Notification.classList.remove("hidden");
     }
-
-
     const formHandler = async () => {
         showTopLoader();
         event.preventDefault();
-        const name = document.getElementById('vname').value;
-        const email = document.getElementById('vemail').value;
-        const contact = document.getElementById('vcontact').value;
-        const address = document.getElementById('vaddress').value;
-
+        const name = document.getElementById('rname').value;
+        const email = document.getElementById('remail').value;
+        const contact = document.getElementById('rcontact').value;
+        const address = document.getElementById('raddress').value;
         const vdata = {
             name, email, contact, address
         }
-
+        console.log('data is ', name, email, contact, address);
         let responseData = await fetch('/visitor/getwheelchair', {
             method: 'POST',
             headers: {
@@ -121,18 +118,17 @@
             },
             body: JSON.stringify(vdata)
         });
-
         let data = await responseData.json();
         console.log('response is ', data.status);
         if (data.status == true) {
+            console.log('calling notification');
             displayNotification('success');
         }
         hideTopLoader();
-
-        document.getElementById('vname').value = "";
-        document.getElementById('vemail').value = "";
-        document.getElementById('vcontact').value = "";
-        document.getElementById('vaddress').value = "";
+        document.getElementById('rname').value = "";
+        document.getElementById('remail').value = "";
+        document.getElementById('rcontact').value = "";
+        document.getElementById('raddress').value = "";
         // location.reload();
         return;
     }
