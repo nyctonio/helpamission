@@ -12,6 +12,7 @@ const {
   wheelChairDataFetcher,
   homePageDataFetcher,
   hashPassword,
+  visitorDataFetcher,
 } = require("./adminutils");
 const { member, donation } = require("../../models");
 const {
@@ -96,7 +97,7 @@ router.post("/addmember", async (req, res) => {
         scheduleforEveryYear(newMember.email);
       }
     });
-    res.redirect('/admin/member');
+    res.redirect("/admin/member");
   } catch (error) {
     console.log(error);
     return res.json({ error });
@@ -116,7 +117,9 @@ router.post("/update-member/:memberID", async (req, res) => {
 router.post("/delete-member/:memberID", async (req, res) => {
   try {
     console.log(req.params.memberID);
-    let currMember = await member.findOneAndDelete({ memberID: req.params.memberID });
+    let currMember = await member.findOneAndDelete({
+      memberID: req.params.memberID,
+    });
     console.log(currMember);
     let referringMember = await member.findOne({
       memberID: currMember.refferdBy,
@@ -126,8 +129,9 @@ router.post("/delete-member/:memberID", async (req, res) => {
       const eligible = (id) => {
         return id !== req.params.memberID;
       };
-      referringMember.addedMembers = referringMember.addedMembers.filter(eligible);
-      console.log('after filter', referringMember);
+      referringMember.addedMembers =
+        referringMember.addedMembers.filter(eligible);
+      console.log("after filter", referringMember);
       await referringMember.save();
     }
     return res.send({ msg: "changed" });
@@ -260,6 +264,18 @@ router.post("/member-normal-donation", async (req, res) => {
   } catch (err) {
     console.log("error in member-normal-donation in admin panel", err);
     return res.send({ status: false });
+  }
+});
+
+router.get("/visitor", async (req, res) => {
+  try {
+    let mainData = await visitorDataFetcher();
+    return res.render("admin/visitor", {
+      visitordata: mainData,
+    });
+  } catch (err) {
+    console.log("error in fetching visitor data");
+    return res.send(err);
   }
 });
 

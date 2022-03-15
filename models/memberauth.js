@@ -1,69 +1,76 @@
-const mongoose = require('mongoose');
-const shortid = require('shortid');
+const mongoose = require("mongoose");
+const shortid = require("shortid");
 
-const memberSchema = new mongoose.Schema({
+const memberSchema = new mongoose.Schema(
+  {
     email: {
-        type: String,
-        required: true,
-        unique: true
+      type: String,
+      required: true,
+      unique: true,
     },
     password: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     refferalCode: {
-        type: String,
-        default: shortid.generate(),
-        required: true
+      type: String,
+      default: shortid.generate(),
+      required: true,
     },
     refferdBy: {
-        type: String,
-        default: 'admin'
+      type: String,
+      default: "admin",
     },
     name: {
-        type: String
+      type: String,
     },
     contact: {
-        type: String
+      type: String,
     },
     address: {
-        type: String
+      type: String,
     },
     city: {
-        type: String
+      type: String,
     },
     state: {
-        type: String
+      type: String,
     },
     bloodGroup: {
-        type: String
+      type: String,
+      default: "N/A",
     },
     memberID: {
-        type: String,
-        unique: true
+      type: String,
+      unique: true,
     },
     ownDonations: [
-        {
-            type: String,
-        }
+      {
+        type: String,
+      },
     ],
     otherDonations: [
-        {
-            type: String
-        }
+      {
+        type: String,
+      },
     ],
     addedMembers: [
-        {
-            type: String
-        }
+      {
+        type: String,
+      },
     ],
     nextDueDate: {
-        type: String,
-        default: Date.now()
-    }
-}, {
-    timestamps: true
-})
+      type: String,
+      default: Date.now(),
+    },
+    image: {
+      type: String,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
 const member = mongoose.model("member", memberSchema);
 

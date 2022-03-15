@@ -1,33 +1,33 @@
 const mongoose = require("mongoose");
 
 const visitorSchema = new mongoose.Schema(
-    {
-        name: {
-            type: String,
-            required: true,
-        },
-        contact: {
-            type: String,
-        },
-        donations: [
-            {
-                type: String,
-            },
-        ],
-        bloodGroup: {
-            type: String,
-            required: true,
-        },
-        email: {
-            type: String,
-        },
-        address: {
-            type: String,
-        },
+  {
+    name: {
+      type: String,
+      required: true,
     },
-    {
-        timestamps: true,
-    }
+    contact: {
+      type: String,
+    },
+    donations: [
+      {
+        type: String,
+      },
+    ],
+    bloodGroup: {
+      type: String,
+      default: "N/A",
+    },
+    email: {
+      type: String,
+    },
+    address: {
+      type: String,
+    },
+  },
+  {
+    timestamps: true,
+  }
 );
 
 const visitor = mongoose.model("visitor", visitorSchema);

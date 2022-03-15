@@ -1,0 +1,240 @@
+<script>
+    let flag = {
+        'member-info': true,
+        'add-member': true,
+        'notdonated': true
+    };
+
+
+
+    const dropdownHandler = (params) => {
+        let dropdown = document.getElementById(params);
+        let open1 = document.getElementById(`${params}-open`);
+        let close1 = document.getElementById(`${params}-close`);
+        if (!flag.params) {
+            dropdown.classList.add("opacity-0");
+            dropdown.classList.add("-translate-y-4");
+            setTimeout(() => {
+                dropdown.classList.add("hidden");
+            }, 200);
+            open1.classList.add("hidden");
+            close1.classList.remove("hidden");
+            flag.params = true;
+        } else {
+            dropdown.classList.remove("hidden");
+            setTimeout(() => {
+                dropdown.classList.remove("opacity-0");
+                dropdown.classList.remove("-translate-y-4");
+            }, 200);
+            close1.classList.add("hidden");
+            open1.classList.remove("hidden");
+            flag.params = false;
+        }
+        console.log(flag.params);
+    };
+
+
+    // excel sheet manager
+
+</script>
+
+<div class="p-4">
+    <button
+        class="focus:outline-none w-full z-100 focus:ring-2 focus:ring-offset-2 -tr focus:ring-gray-500 focus:bg-gray-100 p-4 shadow rounded bg-white text-sm font-medium leading-none text-gray-800 flex items-center justify-between cursor-pointer"
+        onclick="dropdownHandler('member-info')">
+        Visitor Information
+        <div class="">
+            <div class="hidden" id="member-info-close">
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5.00016 0.666664L9.66683 5.33333L0.333496 5.33333L5.00016 0.666664Z" fill="#1F2937" />
+                </svg>
+            </div>
+            <div id="member-info-open">
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5.00016 5.33333L0.333496 0.666664H9.66683L5.00016 5.33333Z" fill="#1F2937" />
+                </svg>
+            </div>
+        </div>
+    </button>
+    <div class="w-full -z-10 mt-2 p-4 bg-white shadow overflow-x-scroll md:overflow-x-hidden transform transition-all duration-200 rounded"
+        id="member-info">
+
+        <!-- list  -->
+        <table class="table-auto border-collapse w-full">
+            <thead>
+                <tr class="search-class rounded-lg text-sm font-medium text-gray-700 text-left"
+                    style="font-size: 0.9674rem">
+                    <th class="px-4 py-2 bg-gray-200 " style="background-color:#f8f8f8">Name</th>
+                    <th class="px-4 py-2 " style="background-color:#f8f8f8">Contact</th>
+                    <th class="px-4 py-2 " style="background-color:#f8f8f8">Email</th>
+                    <th class="px-4 py-2 " style="background-color:#f8f8f8">Blood Group</th>
+                    <th class="px-4 py-2 " style="background-color:#f8f8f8">Address</th>
+                    <th class="px-4 py-2 " style="background-color:#f8f8f8">Total Donations</th>
+                    <th class="px-4 py-2 " style="background-color:#f8f8f8">Date Added</th>
+                </tr>
+            </thead>
+            <tbody class="text-sm font-normal text-gray-700">
+
+                <% for(let data of visitordata){ %>
+                    <tr class="search-class hover:bg-gray-100 border-b border-gray-200 py-10">
+                        <td class="px-4 py-4">
+                            <%-data.name%>
+                        </td>
+                        <td class="px-4 py-4">
+                            <%-data.contact%>
+                        </td>
+                        <td class="px-4 py-4">
+                            <%-data.email%>
+                        </td>
+                        <td class="px-4 py-4">
+                            <%-data.bloodGroup%>
+                        </td>
+                        <td class="px-4 py-4">
+                            <%-data.address%>
+                        </td>
+                        <td class="px-4 py-4 font-bold cursor-pointer text-green-800"
+                            onclick='ownDonationDownloader("<%=data.contact%>")'>
+                            <%-data.donationAmount%>
+                        </td>
+                        <td class="px-4 py-4">
+                            <%-data.dateAdded%>
+                        </td>
+                    </tr>
+                    <% } %>
+
+            </tbody>
+        </table>
+        <button onclick="fullPageDownloader()"
+            class="focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 focus:outline-none focus:bg-indigo-200 text-xs bg-indigo-100 hover:bg-indigo-200 rounded-md mt-6 font-medium py-2 w-full leading-3 text-indigo-700">Download
+            Excel</button>
+    </div>
+</div>
+
+
+<script>
+    let wholeData = '<%- JSON.stringify(visitordata) %>';
+    wholeData = JSON.parse(wholeData)
+    console.log(wholeData);
+    const fullPageDownloader = () => {
+        showTopLoader();
+        let formattedData = [];
+        let sno = 1;
+        for (let i of wholeData) {
+            formattedData.push({
+                "sno": sno++,
+                "Name": i.name,
+                "Email": i.email,
+                "Contact": i.contact,
+                "Address": i.address,
+                "Blood Group": i.bloodGroup,
+                "Donation Amount": i.donationAmount,
+                "Date Added": i.dateAdded
+            });
+        }
+
+        JSONToCSVConvertorProfileSection(formattedData, "visitor Data", true);
+        hideTopLoader();
+    }
+
+    const ownDonationDownloader = (contact) => {
+        showTopLoader();
+        let formattedData = [];
+        let sno = 1;
+        for (let i of wholeData) {
+            if (i.contact == contact) {
+                for (let j of i.donationData) {
+                    if (!j.referredBy) {
+                        j.referredBy = "Own"
+                    }
+                    formattedData.push({
+                        "sno": sno++,
+                        "Donation ID": j.donationID,
+                        "Payment Mode": j.paymentMode,
+                        "Referred By": j.referredBy,
+                        "Amount": j.amount,
+                        "Date": j.dateAndTime
+                    });
+
+                }
+
+            }
+
+        }
+
+        JSONToCSVConvertorProfileSection(formattedData, "visitor donation Data", true);
+        hideTopLoader();
+    }
+
+
+
+    // helper functions to generate and download excel file
+    function JSONToCSVConvertorProfileSection(JSONData, ReportTitle, ShowLabel) {
+        //If JSONData is not an object then JSON.parse will parse the JSON string in an Object
+        var arrData = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;
+
+        var CSV = '\r\n\n';
+
+        //This condition will generate the Label/Header
+        if (ShowLabel) {
+            var row = "";
+
+            //This loop will extract the label from 1st index of on array
+            for (var index in arrData[0]) {
+
+                //Now convert each value to string and comma-seprated
+                row += index + ',';
+            }
+
+            row = row.slice(0, -1);
+
+            //append Label row with line break
+            CSV += row + '\r\n';
+        }
+
+        //1st loop is to extract each row
+        for (var i = 0; i < arrData.length; i++) {
+            var row = "";
+
+            //2nd loop will extract each column and convert it in string comma-seprated
+            for (var index in arrData[i]) {
+                row += '"' + arrData[i][index] + '",';
+            }
+
+            row.slice(0, row.length - 1);
+
+            //add a line break after each row
+            CSV += row + '\r\n';
+        }
+
+        if (CSV == '') {
+            alert("Invalid data");
+            return;
+        }
+
+        //Generate a file name
+        var fileName = "";
+        //this will remove the blank-spaces from the title and replace it with an underscore
+        fileName += ReportTitle.replace(/ /g, "_");
+
+        //Initialize file format you want csv or xls
+        var uri = 'data:text/csv;charset=utf-8,' + escape(CSV);
+
+        // Now the little tricky part.
+        // you can use either>> window.open(uri);
+        // but this will not work in some browsers
+        // or you will not get the correct file extension    
+
+        //this trick will generate a temp <a /> tag
+        var link = document.createElement("a");
+        link.href = uri;
+
+        //set the visibility hidden so it will not effect on your web-layout
+        link.style = "visibility:hidden";
+        link.download = fileName + ".csv";
+
+        //this part will append the anchor tag and remove it after automatic click
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+</script>
