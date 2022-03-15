@@ -1,4 +1,4 @@
-const { member, donation } = require("../../../models");
+const { member, donation, visitor } = require("../../../models");
 const wheel = require("../../../models/wheel");
 const bcrypt = require("bcryptjs");
 
@@ -270,7 +270,8 @@ const wheelChairDataFetcher = async () => {
           contact: i.contact,
           email: i.email,
           status: "returned",
-          dateAdded: dateConvertor(i.createdAt),
+          dateIssued: String(Date(parseInt(i.issueDate))).slice(0, 15),
+          dateReturned: String(Date(parseInt(i.returnDate))).slice(0, 15),
         };
         returned.push(tempObj);
       } else if (!i.isIssued && !i.isReturned) {
@@ -292,7 +293,7 @@ const wheelChairDataFetcher = async () => {
           contact: i.contact,
           email: i.email,
           status: "approved",
-          dateAdded: dateConvertor(i.createdAt),
+          dateAdded: String(Date(parseInt(i.issueDate))).slice(0, 15),
         };
         approved.push(tempObj);
       }
@@ -310,6 +311,51 @@ const wheelChairDataFetcher = async () => {
   }
 };
 
+const visitorDataFetcher = async () => {
+  try {
+    let mainData = [];
+
+    let visitorData = await visitor.find({});
+
+    for (let i of visitorData) {
+      let tempObj = {};
+      tempObj.name = i.name;
+      tempObj.contact = i.contact;
+      tempObj.email = i.email;
+      tempObj.bloodGroup = i.bloodGroup;
+      tempObj.address = i.address;
+      tempObj.dateAdded = dateConvertor(i.createdAt);
+      tempObj.donationAmount = 0;
+      tempObj.donationData = [];
+      for (let j of i.donations) {
+        let donationData = await donation.findOne({ donationID: j });
+        if (donationData) {
+          let temp = {};
+          temp.donationID = donationData.donationID;
+          temp.referredBy = donationData.donorID;
+          temp.amount = donationData.amount;
+          temp.dateAndTime = String(Date(parseInt(i.dateAndTime))).slice(0, 15);
+          if (donationData.donationType === "offlineCashDonation") {
+            temp.paymentMode = "cash";
+          } else if (donationData.donationType === "offlineUpiDonation") {
+            temp.paymentMode = "UPI";
+          } else {
+            temp.paymentMode = "Razorpay";
+          }
+          tempObj.donationData.push(temp);
+          tempObj.donationAmount += donationData.amount;
+        }
+      }
+      mainData.push(tempObj);
+    }
+    console.log(mainData);
+    return mainData;
+  } catch (err) {
+    console.log("error in fetching visitor data", err);
+    return;
+  }
+};
+
 module.exports = {
   memberDataFetcher,
   transactionDataFetcher,
@@ -317,4 +363,5 @@ module.exports = {
   wheelChairDataFetcher,
   homePageDataFetcher,
   hashPassword,
+  visitorDataFetcher,
 };
