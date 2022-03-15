@@ -10,7 +10,7 @@ let swiggy = nodemailer.createTransport({
   secure: false,
   auth: {
     user: "process.env.mail_user",
-    pass: "process.user.mail_pass",
+    pass: "process.env.mail_pass",
   },
 });
 
