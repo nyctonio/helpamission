@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
+const multer = require("multer");
 const {
   hashPassword,
   getAddedMember,
@@ -42,6 +43,17 @@ const razorpay = new Razorpay({
 });
 const fs = require("fs");
 
+// multer setup
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname + "../../public/members"));
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname + Date.now());
+  },
+});
+var upload = multer({ storage: storage });
+
 router.get("/", async (req, res) => {
   const { token } = req.cookies;
   if (verifyMemberToken(token)) {
@@ -67,9 +79,9 @@ router.get("/", async (req, res) => {
     if (userData.nextDueDate > Date.now()) {
       paidStatus = true;
     }
-    console.log(`Number of added members are ${addedMembers.length}. 
-        Own donations are ${sumOwnDonations}. 
-        Other Donations are ${sumOtherDonations}. Donation for this cycle is ${paidStatus}`);
+    // console.log(`Number of added members are ${addedMembers.length}.
+    //     Own donations are ${sumOwnDonations}.
+    //     Other Donations are ${sumOtherDonations}. Donation for this cycle is ${paidStatus}`);
     res.render("member", {
       memberdata: {
         addedMembers: addedMembers.length,
@@ -150,7 +162,7 @@ router.post("/addmember", async (req, res) => {
       }
     });
     console.log(newmem);
-    res.redirect('/member/addmember');
+    res.redirect("/member/addmember");
   } catch (error) {
     console.log(error);
     return res.json({ error });
@@ -168,6 +180,44 @@ router.get("/profile-section", async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.json({ err });
+  }
+});
+
+// update member details & change profile photo
+router.post(
+  "/update-profile-photo/:memberID",
+  upload.single("profile-file"),
+  async (req, res) => {
+    try {
+      await member.findOneAndUpdate(
+        { memberID: req.params.memberID },
+        { image: req.file.path }
+      );
+      return res.send({ status: true });
+    } catch (err) {
+      console.log("error in uploading profile photo", err);
+      return;
+    }
+  }
+);
+
+router.post("/update-member-details", async (req, res) => {
+  try {
+    console.log("body is ", req.body);
+    await member.findOneAndUpdate(
+      { memberID: req.body.memberID },
+      {
+        name: req.body.name,
+        email: req.body.email,
+        contact: req.body.email,
+        address: req.body.address,
+      }
+    );
+    console.log("updated");
+    return res.redirect("back");
+  } catch (err) {
+    console.log("error in updating the details");
+    return res.redirect("back");
   }
 });
 
