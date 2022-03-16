@@ -55,7 +55,7 @@
 
             <div style="background-color: #000000;" class="p-8 flex flex-col lg:w-full xl:w-3/5">
                 <!-- payment form -->
-                <form onsubmit="clickpay()">
+                <form onsubmit="clickpay()" id="donationform">
                     <label class="mt-8 leading-4 text-bold text-gray-50 text-2xl">Help Us : Donate </label>
                     <div class="mt-12 flex-col">
                         <div>
@@ -70,6 +70,7 @@
                     <div class="mt-2 grid ">
                         <select id="vbgroup"
                             class="border  border-gray-300 rounded-md w-full text-gray-600 h-14 pl-4 pr-10 bg-white hover:border-gray-400 focus:outline-none">
+                            <option selected>N/A</option>
                             <option>A+</option>
                             <option>B+</option>
                             <option>AB+</option>
@@ -229,7 +230,7 @@
                         // alert('Payment Failed');
                     }
                     setTimeout(() => {
-                        location.reload();
+                        document.getElementById('donationform').reset()
                     }, 2000)
                 }).catch(err => {
                     displayNotification("failure");
