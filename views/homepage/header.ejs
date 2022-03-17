@@ -1,5 +1,23 @@
 <link rel="stylesheet" href="styles/style.css">
 
+<div id="donate-button-fixed"
+    class="cursor-pointer px-4 py-3 z-100 bg-black rounded-xl text-white font-semibold fixed bottom-4 right-4">
+    <a href="#donationBox">Donate</a>
+</div>
+<div id="work-button-fixed"
+    class="cursor-pointer px-4 py-3 z-100 bg-amber-200 rounded-xl text-black font-semibold fixed bottom-20 right-4"><a
+        href="#workSection">Work</a>
+</div>
+<style>
+    #donate-button-fixed {
+        z-index: 1000;
+    }
+
+    #work-button-fixed {
+        z-index: 1000;
+    }
+</style>
+
 <div class=" bg-white border-b-2 border-red-700">
     <nav class="2xl:container 2xl:mx-auto sm:py-6 sm:px-7 py-5 px-4">
         <!-- For large and Medium-sized Screen -->
@@ -15,13 +33,14 @@
                     src="https://tuk-cdn.s3.amazonaws.com/can-uploader/header-3-svg4.svg" alt="instagram" />
             </div>
             <div class=" flex space-x-3 items-center">
-                <img src="assets/logo-light.png" style="height: 50px;width: 50px;" alt="circle" />
+                <img src="assets/logo-light.png" class="block md:hidden" style="height: 50px;width: 50px;"
+                    alt="circle" />
                 <div class="hidden md:flex">
-                    <h1 class="font-semibold text-xl lg:text-2xl leading-6 text-gray-800">Help A Mission Welfare
+                    <h1 class="font-bold text-2xl lg:text-3xl leading-6 text-gray-800">Help A Mission Welfare
                         Society</h1>
                 </div>
                 <div class="flex md:hidden">
-                    <h1 class="font-semibold md:hidden text-xl lg:text-2xl leading-6 text-gray-800">Help A Mission</h1>
+                    <h1 class="font-bold md:hidden text-3xl lg:text-4xl leading-6 text-gray-800">Help A Mission</h1>
                 </div>
             </div>
             <div class="hidden sm:flex flex-row space-x-4">
