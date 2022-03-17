@@ -294,4 +294,18 @@ router.get("/visitor", async (req, res) => {
   }
 });
 
+router.post("/give-add-power/:memberID", async (req, res) => {
+  try {
+    let currMember = await member.findOne({ memberID: req.params.memberID });
+    currMember.hasAddPower = true;
+    await currMember.save();
+    console.log("after updation is ", currMember);
+    console.log("given");
+    res.redirect("back");
+  } catch (err) {
+    console.log("error in giving power", err);
+    return res.redirect("back");
+  }
+});
+
 module.exports = router;

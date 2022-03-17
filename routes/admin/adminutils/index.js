@@ -82,6 +82,7 @@ const memberDataFetcher = async () => {
       address: i.address,
       city: i.city,
       refferdBy: i.refferdBy,
+      hasAddPower: i.hasAddPower,
       addedMembers: i.addedMembers.length,
       dateAdded: dateConvertor(i.createdAt),
       image: i.image,
@@ -121,6 +122,7 @@ const addedMemberFetcher = async (memberID) => {
       city: tempMember.city,
       createdAt: tempMember.createdAt,
       image: tempMember.image,
+      hasAddPower: tempMember.hasAddPower,
     };
     data.push(tempObj);
   }

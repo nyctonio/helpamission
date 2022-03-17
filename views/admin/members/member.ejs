@@ -72,6 +72,7 @@
                     <th class="px-4 py-2 " style="background-color:#f8f8f8">Total Own Donation</th>
                     <th class="px-4 py-2 " style="background-color:#f8f8f8">Total Other Donations</th>
                     <th class="px-4 py-2 " style="background-color:#f8f8f8">Donate for them</th>
+                    <th class="px-4 py-2 " style="background-color:#f8f8f8">Add Power</th>
                     <th class="px-4 py-2 " style="background-color:#f8f8f8">Delete Member</th>
                 </tr>
             </thead>
@@ -120,12 +121,32 @@
                                 Issue
                             </button>
                         </td>
-                        <td>
-                            <button onclick="addDeleteAlert({flag:false,id:'<%-data.memberID%>'})"
-                                class="bg-red-500 hover:bg-red-400 text-white font-bold py-1 px-4 border-b-4 border-red-700 hover:border-red-500 rounded">
-                                Delete
-                            </button>
-                        </td>
+
+                        <% if(data.hasAddPower) {%>
+                            <td class="px-4 py-4">
+                                Approved
+                            </td>
+                            <%}%>
+
+                                <% if(!data.hasAddPower) {%>
+                                    <td>
+
+                                        <button onclick="givePower('<%-data.memberID%>')"
+                                            class="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded">
+                                            Approve
+                                        </button>
+
+                                        <%}%>
+                                    </td>
+
+
+
+                                    <td>
+                                        <button onclick="addDeleteAlert({flag:false,id:'<%-data.memberID%>'})"
+                                            class="bg-red-500 hover:bg-red-400 text-white font-bold py-1 px-4 border-b-4 border-red-700 hover:border-red-500 rounded">
+                                            Delete
+                                        </button>
+                                    </td>
                     </tr>
                     <% }) %>
             </tbody>
@@ -666,6 +687,18 @@
         hideTopLoader();
     }
 
+
+    const givePower = async (memberID) => {
+        showTopLoader();
+        let responseData = await fetch(`/admin/give-add-power/${memberID}`, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            }
+        });
+        hideTopLoader();
+        location.reload();
+    }
 
     // helper functions to generate and download excel file
     function JSONToCSVConvertorProfileSection(JSONData, ReportTitle, ShowLabel) {

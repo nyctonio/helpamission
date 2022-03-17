@@ -44,6 +44,10 @@ const memberSchema = new mongoose.Schema(
       type: String,
       unique: true,
     },
+    hasAddPower: {
+      type: Boolean,
+      default: false,
+    },
     ownDonations: [
       {
         type: String,

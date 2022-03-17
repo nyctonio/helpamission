@@ -127,16 +127,22 @@ router.post("/logout", async (req, res) => {
   res.redirect("/member/login");
 });
 
-router.get("/addmember", (req, res) => {
+router.get("/addmember", async (req, res) => {
   const { token } = req.cookies;
   if (verifyMemberToken(token)) {
-    res.render("member/addmembers");
+    const verify = jwt.verify(token, JWT_SECRET);
+    let currMember = await member.findOne({ email: verify.username });
+    if (currMember.hasAddPower == true) {
+      res.render("member/addmembers");
+    } else {
+      res.send("<h1>Access Denied</h1>");
+    }
   } else {
     res.redirect("/member/login");
   }
 });
 
-router.get("/offline-donation", (req, res) => {
+router.get("/offline-donation", async (req, res) => {
   const { token } = req.cookies;
   if (verifyMemberToken(token)) {
     res.render("member/offlinedonation");
