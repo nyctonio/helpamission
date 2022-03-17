@@ -71,11 +71,21 @@ const getMemberDetails = async (memberID) => {
   }
 };
 
-const getVisitorDetails = async (visitorID) => {
+const getVisitorDetails = async (donationID) => {
   try {
-    let visitor = await visitor.findOne({ visitorID: visitorID });
-    return visitor;
+    let visitorData = await visitor.find({});
+    let finalVisitor;
+    for (let i of visitorData) {
+      for (let j of i.donations) {
+        if (j == donationID) {
+          finalVisitor = i;
+        }
+      }
+    }
+    console.log("final visitor is ", finalVisitor);
+    return finalVisitor;
   } catch (err) {
+    console.log("error in fetching visitor", err);
     return [];
   }
 };

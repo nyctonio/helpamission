@@ -1,34 +1,41 @@
-const mongoose = require('mongoose');
-const donationSchema = new mongoose.Schema({
+const mongoose = require("mongoose");
+const donationSchema = new mongoose.Schema(
+  {
     amount: {
-        type: Number,
-        required: true
+      type: Number,
+      required: true,
     },
     donorID: {
-        type: String
+      type: String,
     },
     order_id: {
-        type: String
+      type: String,
     },
     payment_id: {
-        type: String
+      type: String,
     },
     dateAndTime: {
-        type: String,
-        default: Date.now()
+      type: String,
+      default: Date.now(),
     },
     donationID: {
-        type: Number,
-        required: true
+      type: Number,
+      required: true,
     },
     donationType: {
-        type: String,
-        required: true,
-        default: 'visitorOnlineDonation'
+      type: String,
+      required: true,
+      default: "visitorOnlineDonation",
     },
-}, {
-    timestamps: true
-});
+    isVerified: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-const donation = mongoose.model('donation', donationSchema);
+const donation = mongoose.model("donation", donationSchema);
 module.exports = donation;

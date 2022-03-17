@@ -43,24 +43,28 @@ const razorpay = new Razorpay({
 const fs = require("fs");
 
 // image upload multer
-const multer = require('multer');
+const multer = require("multer");
 const fileUpload = multer();
-const uploadImage = require('../../config/cloudinary');
-router.post("/profilepicture", fileUpload.single('profilepicture'), (req, res) => {
-  uploadImage(req).then(async (result) => {
-    const { token } = req.cookies;
-    const verify = jwt.verify(token, JWT_SECRET);
-    const data = await member.findOneAndUpdate(
-      {
-        email: verify.username,
-      },
-      {
-        image: result.secure_url,
-      }
-    );
-    res.redirect('/member/profile-section');
-  });
-})
+const uploadImage = require("../../config/cloudinary");
+router.post(
+  "/profilepicture",
+  fileUpload.single("profilepicture"),
+  (req, res) => {
+    uploadImage(req).then(async (result) => {
+      const { token } = req.cookies;
+      const verify = jwt.verify(token, JWT_SECRET);
+      const data = await member.findOneAndUpdate(
+        {
+          email: verify.username,
+        },
+        {
+          image: result.secure_url,
+        }
+      );
+      res.redirect("/member/profile-section");
+    });
+  }
+);
 
 router.get("/", async (req, res) => {
   const { token } = req.cookies;
@@ -245,11 +249,14 @@ const helper = async (donationDetails) => {
       await memberDonationPDF(donationDetails, memberDetails, false);
       break;
     case "offlineUpiDonation":
-      var visitorDetails = await getVisitorDetails(donationDetails.donorID);
+      console.log("in offline upi donation");
+      var visitorDetails = await getVisitorDetails(donationDetails.donationID);
       await offlineDonationPDF(donationDetails, visitorDetails, false);
       break;
     case "offlineCashDonation":
-      var visitorDetails = await getVisitorDetails(donationDetails.donorID);
+      console.log("in offline cash donation");
+      var visitorDetails = await getVisitorDetails(donationDetails.donationID);
+      console.log("visitor details are", visitorDetails);
       await offlineDonationPDF(donationDetails, visitorDetails, false);
       break;
   }
@@ -344,6 +351,7 @@ router.post("/offine-donation", async (req, res) => {
       donationID: Date.now(),
       donorID: currMember.memberID,
       amount: vdonationamount,
+      isVerified: false,
       donationType,
     });
     await offlineDonationPDF(donationData, visitorData, true);

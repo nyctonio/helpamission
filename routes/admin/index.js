@@ -24,7 +24,7 @@ const {
   requestApprovedMailer,
   memberRegisterationMailer,
   memberDonationPDF,
-  wheelChairMailer
+  wheelChairMailer,
 } = require("../../mailers/mailer");
 
 router.get("/", async (req, res) => {
@@ -149,6 +149,20 @@ router.get("/transactions", async (req, res) => {
     res.render("admin/transactions", { transactiondata: data });
   } catch (err) {
     return res.send({ err: err });
+  }
+});
+
+// approving offline donation
+router.post("/verify-offline-donation/:id", async (req, res) => {
+  try {
+    let donationData = await donation.findOne({ donationID: req.params.id });
+    donationData.isVerified = true;
+    await donationData.save();
+    console.log("updated");
+    return res.redirect("back");
+  } catch (err) {
+    console.log("error in approving", err);
+    return res.redirect("back");
   }
 });
 

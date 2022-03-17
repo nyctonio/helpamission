@@ -39,7 +39,7 @@ const homePageDataFetcher = async () => {
 
   let donations = await donation.find({}).sort({
     createdAt: -1,
-  });;
+  });
   for (let i of donations) {
     if (
       i.donationType === "OfflineCashDonation" ||
@@ -53,9 +53,11 @@ const homePageDataFetcher = async () => {
     }
   }
 
-  let wheelChairReq = await wheel.find({ isIssued: false, isReturned: false }).sort({
-    createdAt: -1,
-  });
+  let wheelChairReq = await wheel
+    .find({ isIssued: false, isReturned: false })
+    .sort({
+      createdAt: -1,
+    });
   finalData.wheelChairRequest = wheelChairReq.length;
 
   finalData.offlineDonation = offlineDonation;
@@ -168,14 +170,14 @@ const transactionDataFetcher = async () => {
 
   let homePageDonations = [];
   let memberDonation = [];
-  let offlineDonation = [];
+  let offlineVerifiedDonation = [];
+  let offlineNonVerifiedDonation = [];
 
   for (let i of donationData) {
     switch (i.donationType) {
       case "visitorOnlineDonation":
         var tempData = {
           donationID: i.donationID,
-          visitorID: i.donorID,
           paymentMode: "Razorpay",
           payment_id: i.payment_id,
           amount: i.amount,
@@ -206,31 +208,59 @@ const transactionDataFetcher = async () => {
         memberDonation.push(tempData);
         break;
       case "offlineUpiDonation":
-        var tempData = {
-          donationID: i.donationID,
-          paymentMode: "UPI",
-          collectedBy: i.donorID,
-          amount: i.amount,
-          date: dateConvertor(i.createdAt),
-        };
-        offlineDonation.push(tempData);
+        if (i.isVerified) {
+          var tempData = {
+            donationID: i.donationID,
+            paymentMode: "UPI",
+            collectedBy: i.donorID,
+            amount: i.amount,
+            date: dateConvertor(i.createdAt),
+            isVerified: i.isVerified,
+          };
+          offlineVerifiedDonation.push(tempData);
+        } else {
+          var tempData = {
+            donationID: i.donationID,
+            paymentMode: "UPI",
+            collectedBy: i.donorID,
+            amount: i.amount,
+            date: dateConvertor(i.createdAt),
+            isVerified: i.isVerified,
+          };
+          offlineNonVerifiedDonation.push(tempData);
+        }
+
         break;
       case "offlineCashDonation":
-        var tempData = {
-          donationID: i.donationID,
-          paymentMode: "UPI",
-          collectedBy: i.donorID,
-          amount: i.amount,
-          date: dateConvertor(i.createdAt),
-        };
-        offlineDonation.push(tempData);
+        if (i.isVerified) {
+          var tempData = {
+            donationID: i.donationID,
+            paymentMode: "CASH",
+            collectedBy: i.donorID,
+            amount: i.amount,
+            date: dateConvertor(i.createdAt),
+            isVerified: i.isVerified,
+          };
+          offlineVerifiedDonation.push(tempData);
+        } else {
+          var tempData = {
+            donationID: i.donationID,
+            paymentMode: "CASH",
+            collectedBy: i.donorID,
+            amount: i.amount,
+            date: dateConvertor(i.createdAt),
+            isVerified: i.isVerified,
+          };
+          offlineNonVerifiedDonation.push(tempData);
+        }
         break;
     }
   }
   return {
     homePageDonations,
     memberDonation,
-    offlineDonation,
+    offlineVerifiedDonation,
+    offlineNonVerifiedDonation,
   };
   // console.log("data is ", homePageDonations, memberDonation, offlineDonation);
 };
