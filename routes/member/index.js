@@ -230,6 +230,7 @@ router.post("/update-member-details", async (req, res) => {
         email: req.body.email,
         contact: req.body.email,
         address: req.body.address,
+        bloodGroup: req.body.bloodGroup,
       }
     );
     console.log("updated");
