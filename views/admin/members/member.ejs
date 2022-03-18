@@ -470,7 +470,7 @@
                                                         title="required">*</abbr></label>
                                                 <input placeholder="Email ID"
                                                     class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4"
-                                                    required="required" name="email" type="email">
+                                                    required="required" name="email" type="email" id="emailBlock">
                                                 <p class="text-red text-xs hidden">Please fill out this field.</p>
                                             </div>
                                         </div>
@@ -549,6 +549,9 @@
 </div>
 
 <script>
+
+
+
     let wholeData = '<%- JSON.stringify(memberdata) %>';
     let defaulterData = '<%- JSON.stringify(paymentdata) %>';
     wholeData = JSON.parse(wholeData)

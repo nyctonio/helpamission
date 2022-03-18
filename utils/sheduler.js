@@ -11,16 +11,20 @@ const getAllSchedulingData = async () => {
     if (i.nextDueDate > Date.now()) {
       scheduleforEveryYear(i.email);
     } else {
+      console.log("scheduling for everyday");
       scheduleforEveryDay(i.email);
     }
   }
 };
 
 const scheduleforEveryDay = async (email) => {
-  schedule.scheduleJob(`${email}notification`, "12 18 * * *", async () => {
+  schedule.scheduleJob(`${email}notification`, "00 14 * * FRI", async () => {
     try {
       let memberData = await member.findOne({ email });
-      if (memberData.nextDueDate > Date.now()) {
+      if (
+        memberData.nextDueDate > Date.now() ||
+        Date.now() - memberData.nextDueDate > 3888000000
+      ) {
         schedule.cancelJob(`${memberData.email}notification`);
         console.log("Terminated ", memberData.memberID);
         scheduleforEveryYear(memberData.email);
@@ -37,7 +41,7 @@ const scheduleforEveryDay = async (email) => {
 const scheduleforEveryYear = async (email) => {
   let memberData = await member.findOne({ email });
   let c = await memberData.nextDueDate;
-  console.log("scheduled next year for ", c);
+  console.log("scheduled next year for ", c, email);
   schedule.scheduleJob(c, async () => {
     scheduleforEveryDay(memberData.email);
   });
