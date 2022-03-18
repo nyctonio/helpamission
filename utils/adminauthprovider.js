@@ -56,6 +56,7 @@ const verifyAdminMiddleware = (req, res, next) => {
     return res.redirect("/admin/login");
   } catch (error) {
     console.log(JSON.stringify(error), "error");
+    return res.redirect("/admin/login");
   }
 };
 

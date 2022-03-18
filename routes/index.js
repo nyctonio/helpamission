@@ -51,4 +51,8 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/team", (req, res) => {
+  res.render("homepage/team");
+})
+
 module.exports = router;

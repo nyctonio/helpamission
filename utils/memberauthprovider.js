@@ -55,6 +55,7 @@ const verifyMemberMiddleware = (req, res, next) => {
     return res.redirect("/member/login");
   } catch (error) {
     console.log(JSON.stringify(error), "error");
+    return res.redirect("/member/login");
   }
 };
 
