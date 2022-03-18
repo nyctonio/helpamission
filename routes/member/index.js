@@ -228,7 +228,7 @@ router.post("/update-member-details", async (req, res) => {
       {
         name: req.body.name,
         email: req.body.email,
-        contact: req.body.email,
+        contact: req.body.contact,
         address: req.body.address,
         bloodGroup: req.body.bloodGroup,
       }
