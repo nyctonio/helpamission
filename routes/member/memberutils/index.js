@@ -104,6 +104,7 @@ const dataForProfileSection = async (email) => {
       owndata: {
         name: userData.name,
         contact: userData.contact,
+        email: userData.email,
         bloodGroup: userData.bloodGroup,
         refferalCode: userData.refferalCode,
         address: userData.address,
