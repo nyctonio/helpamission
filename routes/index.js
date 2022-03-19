@@ -51,8 +51,44 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/team", (req, res) => {
-  res.render("homepage/team");
-})
+router.get("/team", async (req, res) => {
+  const teamData = await bucket.getObjects({
+    query: {
+      type: "members",
+    },
+    props: "metadata",
+  });
+
+  let memberData = [];
+
+  for (let i of teamData.objects) {
+    let temp = {
+      name: i.metadata.name,
+      designation: i.metadata.designation,
+      image: i.metadata.memberimage.imgix_url,
+      rank: i.metadata.rank,
+      contact: i.metadata.contact,
+    };
+
+    memberData.push(temp);
+  }
+
+  function compare(a, b) {
+    if (a.rank <= b.rank) {
+      return -1;
+    }
+    if (a.rank > b.rank) {
+      return 1;
+    }
+    return 0;
+  }
+
+  memberData.sort(compare);
+  console.log("team data is ", memberData);
+
+  res.render("homepage/team", {
+    membersdata: memberData,
+  });
+});
 
 module.exports = router;
