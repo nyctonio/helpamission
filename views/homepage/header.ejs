@@ -2,11 +2,11 @@
 
 <div id="donate-button-fixed"
     class="cursor-pointer px-4 py-3 z-100 bg-black rounded-xl text-white font-semibold fixed bottom-4 right-4">
-    <a href="/#donationBox">Donate</a>
+    <a href="#donationBox">Donate</a>
 </div>
 <div id="work-button-fixed"
     class="cursor-pointer px-4 py-3 z-100 bg-amber-200 rounded-xl text-black font-semibold fixed bottom-20 right-4"><a
-        href="/#workSection">Work</a>
+        href="#workSection">Work</a>
 </div>
 <style>
     #donate-button-fixed {
@@ -25,8 +25,9 @@
             <div class="hidden sm:flex flex-row items-center space-x-6">
                 <img class=" focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 cursor-pointer"
                     src="https://tuk-cdn.s3.amazonaws.com/can-uploader/header-3-svg1.svg" alt="twitter" />
-                <img class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 cursor-pointer"
-                    src="https://tuk-cdn.s3.amazonaws.com/can-uploader/header-3-svg2.svg" alt="facebook" />
+                <a href="https://www.facebook.com/HelpaMissionWelfareSociety" target="_blank">
+                    <img class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 cursor-pointer"
+                        src="https://tuk-cdn.s3.amazonaws.com/can-uploader/header-3-svg2.svg" alt="facebook" /></a>
                 <img class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 cursor-pointer"
                     src="https://tuk-cdn.s3.amazonaws.com/can-uploader/header-3-svg3.svg" alt="linkdin" />
                 <img class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 cursor-pointer"
@@ -67,16 +68,20 @@
         <div id="MobileNavigation" class="hidden sm:hidden mt-4 mx-auto">
             <div class="flex flex-row items-center justify-center space-x-6">
                 <img src="https://tuk-cdn.s3.amazonaws.com/can-uploader/header-3-svg1.svg" alt="twitter" />
-                <img src="https://tuk-cdn.s3.amazonaws.com/can-uploader/header-3-svg2.svg" alt="facebook" />
+                <a href="https://www.facebook.com/HelpaMissionWelfareSociety" target="_blank"><img
+                        src="https://tuk-cdn.s3.amazonaws.com/can-uploader/header-3-svg2.svg" alt="facebook" /></a>
                 <img src="https://tuk-cdn.s3.amazonaws.com/can-uploader/header-3-svg3.svg" alt="linkdin" />
                 <img src="https://tuk-cdn.s3.amazonaws.com/can-uploader/header-3-svg4.svg" alt="instagram" />
             </div>
             <div class="flex flex-col gap-4 mt-4 w-80 mx-auto ">
-                <button
-                    class="rounded-md flex space-x-2 w-full h-10 font-normal text-sm leading-3 text-red-700 bg-red-600 bg-opacity-0 hover:opacity-100 duration-100 border border-red-700 focus:outline-none focus:bg-gray-200 hover:bg-gray-200 justify-center items-center">Our
-                    Work</button>
-                <button
-                    class="rounded-md flex space-x-2 w-full h-10 font-normal text-sm leading-3 text-white bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-700 focus:bg-red-600 hover:bg-red-600 duration-150 justify-center items-center">Donate</button>
+                <a href="/team">
+                    <button
+                        class="rounded-md flex space-x-2 w-full h-10 font-normal text-sm leading-3 text-red-700 bg-red-600 bg-opacity-0 hover:opacity-100 duration-100 border border-red-700 focus:outline-none focus:bg-gray-200 hover:bg-gray-200 justify-center items-center">Our
+                        Team</button></a>
+                <a href="/#donationBox">
+                    <button
+                        class="rounded-md flex space-x-2 w-full h-10 font-normal text-sm leading-3 text-white bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-700 focus:bg-red-600 hover:bg-red-600 duration-150 justify-center items-center">Donate</button>
+                </a>
             </div>
         </div>
     </nav>
