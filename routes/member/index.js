@@ -330,7 +330,9 @@ router.post("/offine-donation", async (req, res) => {
       vdonationamount,
       vaddress,
       vpaymentmode,
+      vdate,
     } = req.body;
+    console.log(req.body);
     // checking for visitor
     let visitorData = await visitor.findOne({ contact: vmno });
     if (!visitorData) {
@@ -360,6 +362,7 @@ router.post("/offine-donation", async (req, res) => {
       amount: vdonationamount,
       isVerified: false,
       donationType,
+      createdAt: Date.parse(vdate),
     });
     await offlineDonationPDF(donationData, visitorData, true);
     console.log("donation successfully created ", donationData);
