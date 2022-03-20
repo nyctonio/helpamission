@@ -1,6 +1,6 @@
 <div class="p-4 grid grid-cols-1 md:grid-cols-2">
     <div class="col-span-1 block md:hidden p-4">
-        <div class="w-full rounded-lg overflow-hidden">
+        <div id="changing-image1" class="w-full rounded-lg overflow-hidden">
             <img src="assets/websitetop.jpeg" class="h-full" alt="" srcset="">
         </div>
     </div>
@@ -9,7 +9,7 @@
         <%-data.missionContentData%>
     </div>
     <div class="col-span-1 md:flex justify-center items-center hidden p-4">
-        <div id="changing-image" class="w-full rounded-lg overflow-hidden">
+        <div id="changing-image" class="w-full rounded-lg overflow-hidden ">
             <img src="assets/websitetop.jpeg" class="h-full" alt="" srcset="">
         </div>
     </div>
@@ -23,6 +23,8 @@
     console.log(imagesarray);
     const changeImageAfterFiveSeconds = () => {
         setInterval(() => {
+            console.log('changing image')
+            document.getElementById('changing-image1').innerHTML = `<img src="${imagesarray[Math.floor(Math.random() * imagesarray.length)]}" class="h-full" alt="" srcset="">`;
             document.getElementById('changing-image').innerHTML = `<img src="${imagesarray[Math.floor(Math.random() * imagesarray.length)]}" class="h-full" alt="" srcset="">`;
         }, 5000);
     }
