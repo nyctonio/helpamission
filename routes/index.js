@@ -27,6 +27,27 @@ router.get("/", async (req, res) => {
       props: "slug,title,content,metadata, id",
     });
 
+    const missionContent = await bucket.getObject({
+      id: "6236d5c642bd110009e7919c",
+      props: "slug,title,content",
+    });
+
+    const missionImages = await bucket.getObjects({
+      query: {
+        type: "mission-images",
+      },
+      props: "slug, content, metadata",
+    });
+
+    console.log("mission content is ", missionContent);
+    console.log("missionImages are ", missionImages.objects[0]);
+
+    let missionContentData = missionContent.content;
+    let missionImagesData = [];
+    for (let i of missionImages.objects) {
+      missionImagesData.push(i.image.imgix_url);
+    }
+
     let pastEventsData = [];
     let upcomingEventsData = [];
     for (let i of eventData.objects) {
@@ -42,6 +63,8 @@ router.get("/", async (req, res) => {
       workData: workData,
       pastEventsData: pastEventsData,
       upcomingEventsData: upcomingEventsData,
+      missionContentData: missionContentData,
+      missionImagesData: missionImagesData,
     };
     return res.render("homepage", {
       data: data,
