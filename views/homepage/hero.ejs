@@ -9,13 +9,25 @@
         <%-data.missionContentData%>
     </div>
     <div class="col-span-1 md:flex justify-center items-center hidden p-4">
-        <div class="w-full rounded-lg overflow-hidden">
+        <div id="changing-image" class="w-full rounded-lg overflow-hidden">
             <img src="assets/websitetop.jpeg" class="h-full" alt="" srcset="">
         </div>
     </div>
 </div>
 
 
+
+<script>
+    let imagesarray = '<%- JSON.stringify(data.missionImagesData) %>';
+    imagesarray = JSON.parse(imagesarray)
+    console.log(imagesarray);
+    const changeImageAfterFiveSeconds = () => {
+        setInterval(() => {
+            document.getElementById('changing-image').innerHTML = `<img src="${imagesarray[Math.floor(Math.random() * imagesarray.length)]}" class="h-full" alt="" srcset="">`;
+        }, 5000);
+    }
+    changeImageAfterFiveSeconds();
+</script>
 
 
 <!-- <div class="w-full px-4">

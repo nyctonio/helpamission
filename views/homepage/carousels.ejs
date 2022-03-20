@@ -5,9 +5,9 @@
 <div id="workSection" class="flex items-center justify-center w-full h-full py-24 sm:py-8 px-4">
     <div class="w-full relative flex items-center justify-center">
         <button aria-label="slide backward"
-            class="absolute z-30 left-0 ml-10 focus:outline-none focus:bg-gray-400 focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 cursor-pointer"
+            class="absolute z-30 bg-black p-2 rounded-full left-0 ml-10 focus:outline-none focus:bg-gray-400 focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 cursor-pointer"
             id="prev">
-            <svg class="text-gray-100" width="8" height="14" viewBox="0 0 8 14" fill="none"
+            <svg class="text-gray-100" width="20" height="20" viewBox="0 0 8 14" fill="none"
                 xmlns="http://www.w3.org/2000/svg">
                 <path d="M7 1L1 7L7 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                     stroke-linejoin="round" />
@@ -20,9 +20,9 @@
             </div>
         </div>
         <button aria-label="slide forward"
-            class="absolute z-30 right-0 mr-10 focus:outline-none focus:bg-gray-400 focus:ring-2 focus:ring-offset-2 focus:ring-gray-400"
+            class="absolute bg-black p-2 rounded-full z-30 right-0 mr-10 focus:outline-none focus:bg-gray-400 focus:ring-2 focus:ring-offset-2 focus:ring-gray-400"
             id="next">
-            <svg class="text-gray-100" width="8" height="14" viewBox="0 0 8 14" fill="none"
+            <svg class="text-gray-100" width="20" height="20" viewBox="0 0 8 14" fill="none"
                 xmlns="http://www.w3.org/2000/svg">
                 <path d="M1 1L7 7L1 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                     stroke-linejoin="round" />
@@ -34,12 +34,19 @@
 <script>
     let defaultTransform = 0;
     function goNext(trans) {
+        console.log('hiii');
         defaultTransform = defaultTransform - 2;
         let slider = document.getElementById("slider");
         if (Math.abs(defaultTransform) >= slider.scrollWidth / 1.7) defaultTransform = 0;
         slider.style.transform = "translateX(" + defaultTransform + "px)";
     }
-    next.addEventListener("click", goNext);
+    function goNextButton() {
+        let slider = document.getElementById("slider");
+        if (Math.abs(defaultTransform) === 0) defaultTransform = 0;
+        else defaultTransform = defaultTransform - 398;
+        slider.style.transform = "translateX(" + defaultTransform + "px)";
+    }
+    next.addEventListener("click", goNextButton);
     function goPrev() {
         let slider = document.getElementById("slider");
         if (Math.abs(defaultTransform) === 0) defaultTransform = 0;
