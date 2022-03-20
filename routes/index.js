@@ -39,13 +39,13 @@ router.get("/", async (req, res) => {
       props: "slug, content, metadata",
     });
 
-    console.log("mission content is ", missionContent);
-    console.log("missionImages are ", missionImages.objects[0]);
+    // console.log("mission content is ", missionContent);
+    // console.log("missionImages are ", missionImages.objects[0]);
 
-    let missionContentData = missionContent.content;
+    let missionContentData = missionContent.object.content;
     let missionImagesData = [];
     for (let i of missionImages.objects) {
-      missionImagesData.push(i.image.imgix_url);
+      missionImagesData.push(i.metadata.image.imgix_url);
     }
 
     let pastEventsData = [];
@@ -59,6 +59,8 @@ router.get("/", async (req, res) => {
         upcomingEventsData.push(i);
       }
     }
+
+    console.log("final content is ", missionContentData, missionImagesData);
     let data = {
       workData: workData,
       pastEventsData: pastEventsData,
