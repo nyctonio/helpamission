@@ -2,25 +2,27 @@
 <div class="mt-10 overflow-y-scroll">
     <div class="grid  place-items-center">
         <div class="w-11/12 p-12 bg-white sm:w-8/12 md:w-1/2 lg:w-5/12">
-            <h1 class="text-xl font-semibold">Hello there 👋, <span class="font-normal">fill in your information of the
+            <h1 class="text-xl font-semibold">Hello there 👋, <span class="font-normal">fill in your information
+                    of the
                     donor</span></h1>
-            <form class="mt-6" action="/member/offine-donation" method="post">
+            <form class="mt-6" id="donationForm">
                 <label class="block mt-2 text-xs font-semibold text-gray-600 uppercase">Name</label>
-                <input type="text" name="vname" placeholder="name" autocomplete="email"
+                <input type="text" name="vname" placeholder="name" autocomplete="name" id="vname"
                     class="block w-full p-3 mt-2 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner"
                     required />
                 <label class="block mt-2 text-xs font-semibold text-gray-600 uppercase">E-mail</label>
-                <input type="email" name="vemail" placeholder="youremail@gmail.com" autocomplete="email"
+                <input type="email" name="vemail" placeholder="youremail@gmail.com" autocomplete="email" id="vemail"
                     class="block w-full p-3 mt-2 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner"
                     id="emailBlock" required />
                 <label class="block mt-2 text-xs font-semibold text-gray-600 uppercase">Phone
                     Number</label>
-                <input type="number" name="vmno" placeholder="mobile number" autocomplete="number"
+                <input type="number" name="vmno" placeholder="mobile number" autocomplete="number" id="vmno"
                     class="block w-full p-3 mt-2 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner"
                     required />
                 <label class="block mt-2 text-xs font-semibold text-gray-600 uppercase">Donation
                     Amount</label>
                 <input type="number" name="vdonationamount" placeholder="amount" autocomplete="new-password"
+                    id="vdonationamount"
                     class="block w-full p-3 mt-2 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner"
                     required />
 
@@ -28,7 +30,7 @@
                     Group</label>
                 <select
                     class="block w-full mt-1 bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4 md:w-full "
-                    required="required" name="vbgroup" id="integration_city_id">
+                    required="required" name="vbgroup" id="vbgroup">
                     <option selected>N/A</option>
                     <option>A+</option>
                     <option>B+</option>
@@ -45,7 +47,7 @@
                     Group</label>
                 <select
                     class="block w-full mt-1 bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4 md:w-full "
-                    required="required" name="vpaymentmode" id="integration_city_id">
+                    required="required" name="vpaymentmode" id="vpaymentmode">
                     <option>Cash</option>
                     <option>UPI</option>
                 </select>
@@ -59,10 +61,10 @@
 
                 <label for="password-confirm"
                     class="block mt-2 text-xs font-semibold text-gray-600 uppercase">Address</label>
-                <input name="vaddress" placeholder="address"
+                <input name="vaddress" placeholder="address" id="vaddress"
                     class="block w-full p-3 mt-2 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner"
                     required />
-                <button type="submit"
+                <button type="button" onclick="formSubmitHandler()"
                     class="w-full py-3 mt-6 font-medium tracking-widest text-white uppercase bg-black shadow-lg focus:outline-none hover:bg-gray-900 hover:shadow-none">
                     Add Donation
                 </button>
@@ -74,5 +76,42 @@
 <script>
     let d = new Date().toLocaleString("en-CA", { timeZone: "Asia/Kolkata" });
     document.getElementById('dateInput').value = d.substr(0, 10);
-    console.log(d); 
+    console.log(d);
+
+    const formSubmitHandler = async () => {
+        event.preventDefault();
+        showTopLoader();
+        let vname = document.getElementById('vname').value;
+        let vemail = document.getElementById('vemail').value;
+        let vmno = document.getElementById('vmno').value;
+        let vdonationamount = document.getElementById('vdonationamount').value;
+        let vbgroup = document.getElementById('vbgroup').value;
+        let vpaymentmode = document.getElementById('vpaymentmode').value;
+        let vdate = document.getElementById('dateInput').value;
+        let vaddress = document.getElementById('vaddress').value;
+
+        let data = {
+            vname, vemail, vmno, vdonationamount, vbgroup, vpaymentmode, vdate, vaddress
+        };
+
+        console.log(data);
+
+        let responseData = await fetch('/member/offline-donation', {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        let res = await responseData.json();
+        console.log(responseData);
+        hideTopLoader();
+        if (res.status == true) {
+            window.alert('donation successfull');
+        }
+        document.getElementById('donationForm').reset();
+        console.log(res);
+    }
+
 </script>

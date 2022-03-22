@@ -139,9 +139,21 @@ const dataForProfileSection = async (email) => {
       data.owndonation.push(temp);
     }
     for (let i of otherDonations) {
-      let visitorwhodonated = await visitor.findOne({
-        donationID: i.donationID,
-      });
+      let visitorData = await visitor.find({});
+      let visitorwhodonated;
+      for (let j of visitorData) {
+        console.log("currently on ", j);
+        for (let k of j.donations) {
+          console.log("matching ", k, "with ", i);
+          if (k == i.donationID) {
+            visitorwhodonated = j;
+            console.log("match found");
+            break;
+          }
+        }
+      }
+
+      console.log("visitor is ", visitorwhodonated);
       let temp = {
         name: visitorwhodonated.name,
         contact: visitorwhodonated.contact,

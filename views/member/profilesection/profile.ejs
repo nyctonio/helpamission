@@ -357,6 +357,7 @@
                     <th class="px-4 py-2 " style="background-color:#f8f8f8">Blood Group</th>
                     <th class="px-4 py-2 " style="background-color:#f8f8f8">Contact</th>
                     <th class="px-4 py-2 " style="background-color:#f8f8f8">Address</th>
+                    <th class="px-4 py-2 " style="background-color:#f8f8f8">Update</th>
                     <th class="px-4 py-2 " style="background-color:#f8f8f8">
                         <div class="flex justify-center items-center text-center">
                             Download Slip
@@ -393,6 +394,11 @@
                             <%-data.address%>
                         </td>
                         <td class="px-4 py-4">
+                            <button
+                                class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-1 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
+                                onclick="addNormalDonationAlert({flag:false,id:'<%-data.donationID%>'})">Update</button>
+                        </td>
+                        <td class="px-4 py-4">
                             <div class="flex justify-center cursor-pointer items-center">
                                 <a target="_blank" href="/member/download-slip/<%-data.donationID%>">
                                     <img src="https://s2.svgbox.net/hero-outline.svg?ic=download&color=90EE90"
@@ -409,6 +415,74 @@
             Excel</button>
     </div>
 </div>
+
+<!-- scripts -->
+<div class="relative flex justify-center items-center">
+    <div id="normaldonationalert" class="z-10 w-full h-full hidden bg-gray-900 bg-opacity-80 top-0 fixed sticky-0">
+        <div class="w-full h-full flex justify-center items-center">
+            <div class="grid place-items-center">
+                <div class="w-11/12 p-12 bg-white">
+                    <h1 class="text-xl font-semibold">Hello there 👋, <span class="font-normal">Please fill the
+                            following details to update this donation.</h1>
+                    <form class="mt-6" action="/member/update-offline-donation" method="post">
+                        <label class="block mt-2 text-xs font-semibold text-gray-600 uppercase">Donation
+                            Amount</label>
+                        <input type="number" name="vdonationamount" placeholder="amount" autocomplete="new-password"
+                            id="vdonationamount"
+                            class="block w-full p-3 mt-2 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner"
+                            required />
+
+
+                        <label class="block mt-2 text-xs font-semibold text-gray-600 uppercase">Payment
+                            Method
+                            Group</label>
+                        <select
+                            class="block w-full mt-1 bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4 md:w-full "
+                            required="required" name="vpaymentmode" id="vpaymentmode">
+                            <option>Cash</option>
+                            <option>UPI</option>
+                        </select>
+
+                        <button type="submit"
+                            class="w-full py-3 mt-6 font-medium tracking-widest text-white uppercase bg-black shadow-lg focus:outline-none hover:bg-gray-900 hover:shadow-none">
+                            Update Details
+                        </button>
+                        <button type="button" onclick="normaldonationAlert(false)"
+                            class="w-full py-3 mt-6 font-medium tracking-widest text-black uppercase bg-amber-200 shadow-lg focus:outline-none hover:bg-amber-100 hover:shadow-none">
+                            Cancel
+                        </button>
+                        <input type="hidden" id="hiddenDonationID" name="donationID">
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div id="normaldonationalertdata" class="hidden"></div>
+        <button onclick="payAlert(false)"
+            class="text-gray-800 absolute top-8 right-8 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800"
+            aria-label="close">
+            <img class="dark:hidden" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/cookies-1-svg2.svg"
+                alt="close"></img>
+            <img class="dark:block hidden" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/cookies-1-svg2dark.svg"
+                alt="close"></img>
+        </button>
+    </div>
+</div>
+
+<script>
+    let normalDonationAlert = document.getElementById("normaldonationalert");
+
+    const normaldonationAlert = (flag) => {
+        normalDonationAlert.classList.toggle("hidden");
+    };
+    const addNormalDonationAlert = ({ flag, id }) => {
+        normaldonationAlert(flag)
+        document.getElementById('hiddenDonationID').value = `${id}`;
+        console.log(document.getElementById('hiddenDonationID').value)
+        console.log('id is ', `${id}`);
+    }
+</script>
+
+
 <div class="p-4">
     <button
         class="focus:outline-none w-full focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:bg-gray-100 p-4 shadow rounded bg-white text-sm font-medium leading-none text-gray-800 flex items-center justify-between cursor-pointer"

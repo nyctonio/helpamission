@@ -316,7 +316,7 @@ router.get("/download-slip/:donationID", async (req, res, next) => {
   }
 });
 // offline donation
-router.post("/offine-donation", async (req, res) => {
+router.post("/offline-donation", async (req, res) => {
   try {
     const { token } = req.cookies;
     const verify = jwt.verify(token, JWT_SECRET);
@@ -364,6 +364,8 @@ router.post("/offine-donation", async (req, res) => {
       donationType,
       createdAt: Date.parse(vdate),
     });
+
+    console.log("temp date is ", Date.parse(vdate));
     await offlineDonationPDF(donationData, visitorData, true);
     console.log("donation successfully created ", donationData);
     // updating member donation
@@ -372,9 +374,33 @@ router.post("/offine-donation", async (req, res) => {
     // updaing visitor donations
     visitorData.donations.push(donationData.donationID);
     await visitorData.save();
-    return res.redirect("back");
+    return res.send({ status: true });
   } catch (err) {
     console.log("error in creating donation for member ", err);
+    return res.send({ status: false });
+  }
+});
+
+router.post("/update-offline-donation", async (req, res) => {
+  try {
+    console.log("req.body is ", req.body);
+    const donationType =
+      req.body.vpaymentmode === "UPI"
+        ? "offlineUpiDonation"
+        : "offlineCashDonation";
+
+    await donation.findOneAndUpdate(
+      { donationID: req.body.donationID },
+      {
+        amount: req.body.vdonationamount,
+        donationType: donationType,
+      }
+    );
+    console.log("updated donation is ", updatedDonation);
+    return res.redirect("back");
+  } catch (err) {
+    console.log("error in updating offline donation", err);
+    return res.redirect("back");
   }
 });
 
