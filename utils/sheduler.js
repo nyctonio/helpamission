@@ -1,6 +1,6 @@
 const schedule = require("node-schedule");
 const member = require("../models/memberauth");
-const donationDeadlineMailer = require("../mailers/mailer");
+const { deadlineDonationMailer } = require("../mailers/mailer");
 
 const getAllSchedulingData = async () => {
   console.log("getAllSchedulingData");
@@ -18,7 +18,7 @@ const getAllSchedulingData = async () => {
 };
 
 const scheduleforEveryDay = async (email) => {
-  schedule.scheduleJob(`${email}notification`, "00 14 * * FRI", async () => {
+  schedule.scheduleJob(`${email}notification`, "14 23 * * THU", async () => {
     try {
       let memberData = await member.findOne({ email });
       if (
@@ -29,7 +29,11 @@ const scheduleforEveryDay = async (email) => {
         console.log("Terminated ", memberData.memberID);
         scheduleforEveryYear(memberData.email);
       } else {
-        await donationDeadlineMailer(memberData);
+        memberData.nextDueDate -= 31560000000;
+        const newdate = new Date(parseInt(memberData.nextDueDate));
+        memberData.nextDueDate = `${newdate}`.slice(4, 10);
+        console.log(memberData);
+        await deadlineDonationMailer(memberData);
         console.log("sending mail");
       }
     } catch (err) {

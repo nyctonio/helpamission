@@ -20,6 +20,8 @@ let renderTemplate = (data, relativePath) => {
     let templateData = {
       data,
     };
+
+    console.log("render data is ", templateData);
     // console.log('template data is ', templateData);
     // console.log('in render template function');
     ejs.renderFile(
