@@ -180,10 +180,10 @@
         async function pay({ data, orderId }) {
             hideTopLoader();
             const options = {
-                "key": "rzp_test_GM8EczCZXXCl6Y",
+                "key": "rzp_live_0UZgYK6KH3WVM6",
                 "amount": (data.amount * 100).toString(), // 2000 paise = INR 20
-                "name": "Blood Donation",
-                "description": "Donate Blood",
+                "name": "Online Donation",
+                "description": "Donation",
                 "order_id": orderId,
                 "image": "https://i.ibb.co/vJWLKZK/blood-donation.png",
                 "handler": function (response) {
@@ -312,7 +312,7 @@
         hideTopLoader();
         console.log(data.amount);
         const options = {
-            "key": "rzp_test_GM8EczCZXXCl6Y",
+            "key": "rzp_live_0UZgYK6KH3WVM6",
             "amount": (data.amount * 100).toString(), // 2000 paise = INR 20
             "name": "Help-A Mission",
             "description": "Member Donation",
