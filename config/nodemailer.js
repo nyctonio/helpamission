@@ -4,8 +4,8 @@ const ejs = require("ejs");
 const path = require("path");
 
 let swiggy = nodemailer.createTransport({
-  service: "gmail",
-  host: "smtp.gmail.com",
+  service: "smtp",
+  host: "smtpout.secureserver.net",
   port: 587,
   secure: false,
   auth: {

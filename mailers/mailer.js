@@ -38,7 +38,7 @@ const visitorOnlineDonationMailer = async (donationData, visitorData) => {
     );
     swiggy
       .sendMail({
-        from: "helpamission1@gmail.com",
+        from: "contact@helpamission.in",
         to: visitorData.email,
         subject: "Donation Successful",
         html: htmlData,
@@ -134,7 +134,7 @@ const offlineDonation = async (donationData, visitorData) => {
     let htmlData = renderTemplate(wholeData, "offlineDonationContent.ejs");
     swiggy
       .sendMail({
-        from: "helpamission1@gmail.com",
+        from: "contact@helpamission.in",
         to: visitorData.email,
         subject: "Donation Successful",
         html: htmlData,
@@ -223,15 +223,14 @@ const memberDonation = async (donationData, memberData) => {
     console.log("whole data is ", wholeData);
     let htmlData = renderTemplate(
       wholeData,
-      `${
-        donationData.donationType === "memberFixedDonation"
-          ? "memberFixedDonationContent.ejs"
-          : "memberNormalDonationContent.ejs"
+      `${donationData.donationType === "memberFixedDonation"
+        ? "memberFixedDonationContent.ejs"
+        : "memberNormalDonationContent.ejs"
       }`
     );
     swiggy
       .sendMail({
-        from: "helpamission1@gmail.com",
+        from: "contact@helpamission.in",
         to: memberData.email,
         subject: "Donation Successful",
         html: htmlData,
@@ -314,7 +313,7 @@ const memberRegisterationMailer = async (member) => {
     let htmlData = renderTemplate(member, "memberRegisteration.ejs");
     swiggy
       .sendMail({
-        from: "helpamission1@gmail.com",
+        from: "contact@helpamission.in",
         to: member.email,
         subject: "Registeration Successful",
         html: htmlData,
@@ -334,7 +333,7 @@ const deadlineDonationMailer = async (member) => {
     let htmlData = renderTemplate(member, "donationDeadline.ejs");
     swiggy
       .sendMail({
-        from: "helpamission1@gmail.com",
+        from: "contact@helpamission.in",
         to: member.email,
         subject: "Donation Pending",
         html: htmlData,
@@ -352,7 +351,7 @@ const wheelChairMailer = async (wheeldata) => {
     let htmlData = renderTemplate(wheeldata, "wheelchair.ejs");
     swiggy
       .sendMail({
-        from: "helpamission1@gmail.com",
+        from: "contact@helpamission.in",
         to: wheeldata.email,
         subject: "Request Approved",
         html: htmlData,
