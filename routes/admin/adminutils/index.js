@@ -42,12 +42,14 @@ const homePageDataFetcher = async () => {
   });
   for (let i of donations) {
     if (
-      i.donationType === "OfflineCashDonation" ||
-      i.donationType === "OfflineUpiDonation"
+      i.donationType === "offlineCashDonation" ||
+      i.donationType === "offlineUpiDonation"
     ) {
+      console.log("offline donation is ", i);
       offlineDonation.count++;
       offlineDonation.amount += i.amount;
     } else {
+      console.log("online donation is ", i);
       onlineDonation.count++;
       onlineDonation.amount += i.amount;
     }

@@ -72,6 +72,7 @@ const visitorOnlineDonationPDF = async (
   sendMail
 ) => {
   try {
+    console.log("visitor data is ", visitorData);
     let ejsPath = path.join(
       __dirname,
       "../views/pdfTemplates/attachment/visitorOnlineDonationPDF.ejs"
@@ -223,9 +224,10 @@ const memberDonation = async (donationData, memberData) => {
     console.log("whole data is ", wholeData);
     let htmlData = renderTemplate(
       wholeData,
-      `${donationData.donationType === "memberFixedDonation"
-        ? "memberFixedDonationContent.ejs"
-        : "memberNormalDonationContent.ejs"
+      `${
+        donationData.donationType === "memberFixedDonation"
+          ? "memberFixedDonationContent.ejs"
+          : "memberNormalDonationContent.ejs"
       }`
     );
     swiggy

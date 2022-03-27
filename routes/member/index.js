@@ -244,7 +244,7 @@ router.post("/update-member-details", async (req, res) => {
 const helper = async (donationDetails) => {
   switch (donationDetails.donationType) {
     case "visitorOnlineDonation":
-      var visitorDetails = await getVisitorDetails(donationDetails.donorID);
+      var visitorDetails = await getVisitorDetails(donationDetails.donationID);
       await visitorOnlineDonationPDF(donationDetails, visitorDetails, false);
       break;
     case "memberFixedDonation":

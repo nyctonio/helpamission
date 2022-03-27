@@ -32,7 +32,7 @@ router.get("/", async (req, res) => {
   if (verifyAdminToken(token)) {
     // const verify = jwt.verify(token, JWT_SECRET);
     let data = await homePageDataFetcher();
-    console.log(data);
+    console.log("data is ", data);
     // res.send(data);
     res.render("admin", { dashboarddata: data });
   } else {
